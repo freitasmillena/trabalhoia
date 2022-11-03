@@ -1,19 +1,20 @@
-from nodo import Node
+from nodo import Nodo
+from Grafo import Grafo
 
 
 def main():
-   n1 = Node(1,3,"X")
-   n2 = Node(0,5,"-")
-   n3 = Node(3,1,"X")
+   #n1 = Nodo(1,3,"X")
+   #n2 = Nodo(0,5,"-")
+   #n3 = Nodo(3,1,"X")
 
-   print(n1)
-   print(n2)
-   print(n3)
+   grafo = Grafo()
 
-   print(n1.__hash__())
-   print(n3.__hash__())
+   grafo.parse("teste.txt")
+
+   print(grafo)
 
 if __name__ == '__main__':
     main()
+
 
 
