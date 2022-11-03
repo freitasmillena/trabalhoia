@@ -1,5 +1,5 @@
 from nodo import Nodo
-from Grafo import Grafo
+from grafo import Grafo
 
 
 def main():
