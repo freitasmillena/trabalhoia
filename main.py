@@ -11,7 +11,15 @@ def main():
 
    grafo.parse("teste.txt")
 
-   print(grafo)
+   grafo.add_heuristica()
+
+
+   #print(grafo)
+   #print(grafo.m_nodos_objetivos)
+   #print(grafo.m_h)
+
+   print(grafo.procura_BFS(grafo.nodo_inicial, grafo.m_nodos_objetivos))
+   print(grafo.procura_aStar(grafo.nodo_inicial, grafo.m_nodos_objetivos))
 
 if __name__ == '__main__':
     main()

@@ -24,7 +24,10 @@ class Nodo:
         return self.m_char
 
     def __eq__(self, other):
-        return self.m_x == other.m_x and self.m_y == other.m_y  # são iguais se coords forem iguais
+        if other == None:
+            return False
+        else:
+            return self.m_x == other.m_x and self.m_y == other.m_y  # são iguais se coords forem iguais
 
     def __hash__(self):
         return hash(self.m_x*0.5 + self.m_y*0.25)
