@@ -1,3 +1,4 @@
+from Mapa import Mapa
 from nodo import Nodo
 from grafo import Grafo
 import sys
@@ -7,15 +8,19 @@ def main():
    
    # ficheiro linhas colunas
 
-    ficheiro = sys.argv[1]
-    linhas = int(sys.argv[2])
-    colunas = int(sys.argv[3])
+    ficheiro = "teste.txt" #sys.argv[1]
+    linhas = 7 #int(sys.argv[2])
+    colunas = 10 #int(sys.argv[3])
 
-    mapa = Mapa(linhas, colunas)
+    m = Mapa(linhas, colunas)
 
-    mapa.parse(ficheiro)
+    m.parse(ficheiro)
 
-    print(mapa.__str__())
+    m.expande_grafo()
+
+    a,b = m.grafo.procura_BFS()
+
+    print(a,b)
 
 
 if __name__ == '__main__':

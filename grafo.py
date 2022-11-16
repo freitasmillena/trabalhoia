@@ -44,33 +44,6 @@ class Grafo:
             return 25
         else: return 1
 
-    def parse(self, ficheiro):
-        x = 0
-        y = 0
-        f = open(ficheiro, 'r')
-        aux = {}
-        linhas = f.readlines()
-        for linha in linhas:
-            for char in linha:
-                if char != '\n':
-                    aux[(x,y)] = char
-                    n2 = Nodo(x, y , char)
-                    if x - 1 >= 0:
-                        n1 = Nodo(x-1, y, aux[(x-1,y)])
-                        custo = self.charCusto(aux[(x-1,y)],char)
-                        self.add_aresta(n1, n2, custo)
-                    if y - 1 >= 0:
-                        n1 = Nodo(x, y - 1, aux[(x, y - 1)])
-                        custo = self.charCusto(aux[(x, y - 1)], char)
-                        self.add_aresta(n1, n2, custo)
-                    if char == 'F': # and n2 not in self.m_nodos_objetivos
-                        self.m_nodos_objetivos.append(n2)
-                    elif char == 'P':
-                        self.nodo_inicial = n2
-                y += 1
-            y = 0
-            x += 1
-
     ####################################
     # Calcular Distâncias de Manhattan #
     ####################################
@@ -101,7 +74,9 @@ class Grafo:
         for (nodo, custo) in a:
             if nodo == node2:
                 custoT = custo
-
+        print(node1)
+        print(node2)
+        print(custoT)
         return custoT
 
     ########################################
@@ -128,7 +103,7 @@ class Grafo:
     # Procura BFS #
     ###############
 
-    def procura_BFS(self, inicial, final):
+    def procura_BFS(self):
         # definir nodo final
         nodo_objetivo_final = None
 
@@ -137,25 +112,25 @@ class Grafo:
         fila = Queue()
 
         # adicionar o nodo inicial à fila e aos visitados
-        fila.put(inicial)
-        visited.add(inicial)
+        fila.put(self.nodo_inicial)
+        visited.add(self.nodo_inicial)
 
         # garantir que o inicial node nao tem pais...
         parent = dict()
-        parent[inicial] = None
+        parent[self.nodo_inicial] = None
 
         path_found = False
         while not fila.empty() and path_found == False:
             # print("visitou")
             nodo_atual = fila.get()
             # print(nodo_atual)
-            if nodo_atual in final:
+            if nodo_atual in self.m_nodos_objetivos:
                 path_found = True
                 nodo_objetivo_final = nodo_atual
             else:
                 for (adjacente, custo) in self.m_grafo[nodo_atual]:
                     # print(adjacente)
-                    if adjacente not in visited and adjacente.m_char != 'X':
+                    if adjacente not in visited:
                         fila.put(adjacente)
                         parent[adjacente] = nodo_atual
                         visited.add(adjacente)
@@ -184,8 +159,7 @@ class Grafo:
     def getAdjacentes(self, nodo):
         lista = []
         for (adjacente, custo) in self.m_grafo[nodo]:
-            if adjacente.m_char != 'X':
-                lista.append((adjacente, custo))
+            lista.append((adjacente, custo))
         return lista
 
 
@@ -209,59 +183,27 @@ class Grafo:
                 node = k
         return node
 
-
-    
-
-    
-    def nove(self, nodo):
-        aceleracoes_possiveis = [(0,0), (1,0), (0,1), (1,1), (-1,-1), (-1, 0), (0,-1), (-1,1), (1, -1)]
-        nodos_resultado = {}
-        for (aceleracao_x, aceleracao_y) in aceleracoes_possiveis:
-            nodo_final_x = nodo.m_x + nodo.velocity_x + aceleracao_x
-            nodo_final_y = nodo.m_y + nodo.velocity_y + aceleracao_y
-            
-            nodo_proximo = nodo(nodo_final_x, nodo_final_y, None)
-
-            if nodo_proximo in self.m_nodos :
-
-
-
-    
-    
-    def expande_grafo(self, nodo):
-
-        nodos_visitados = set()
-        nodos_a_visitar = []
-
-        nodos_a_visitar.append(self.nodo_inicial)
-
-        while(nodos_a_visitar):
-            nodo_atual = nodos_a_visitar.pop()
-            nove(nodo_atual)
-
-
-
     ############
     #    A*    #
     ############
 
-    def procura_aStar(self, inicial, final):
+    def procura_aStar(self):
         # open_list is a list of nodes which have been visited, but who's neighbors
         # haven't all been inspected, starts off with the start node
         # closed_list is a list of nodes which have been visited
         # and who's neighbors have been inspected
-        open_list = {inicial}
+        open_list = {self.nodo_inicial}
         closed_list = set([])
 
         # g contains current distances from start_node to all other nodes
         # the default value (if it's not found in the map) is +infinity
         g = {} 
 
-        g[inicial] = 0
+        g[self.nodo_inicial] = 0
 
         # parents contains an adjacency map of all nodes
         parents = {}
-        parents[inicial] = inicial
+        parents[self.nodo_inicial] = self.nodo_inicial
         n = None
         while len(open_list) > 0:
             # find a node with the lowest value of f() - evaluation function
@@ -282,25 +224,25 @@ class Grafo:
 
             # if the current node is the stop_node
             # then we begin reconstructin the path from it to the inicial_node
-            if n in final:
+            if n in self.m_nodos_objetivos:
                 reconst_path = []
 
                 while parents[n] != n:
                     reconst_path.append(n)
                     n = parents[n]
 
-                reconst_path.append(inicial)
+                reconst_path.append(self.nodo_inicial)
 
                 reconst_path.reverse()
 
                 #print('Path found: {}'.format(reconst_path))
-                return (reconst_path, self.calcula_custo(reconst_path))
+                return reconst_path, self.calcula_custo(reconst_path)
 
             # for all neighbors of the current node do
             for (m, weight) in self.getAdjacentes(n):  # definir função getneighbours  tem de ter um par nodo peso
                 # if the current node isn't in both open_list and closed_list
                 # add it to open_list and note n as it's parent
-                if m not in open_list and m not in closed_list and m.m_char != 'X':
+                if m not in open_list and m not in closed_list:
                     open_list.add(m)
                     parents[m] = n
                     g[m] = g[n] + weight
@@ -314,7 +256,7 @@ class Grafo:
                         g[m] = g[n] + weight
                         parents[m] = n
 
-                        if m in closed_list and m.m_char != 'X':
+                        if m in closed_list:
                             closed_list.remove(m)
                             open_list.add(m)
 
