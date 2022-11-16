@@ -188,6 +188,7 @@ class Grafo:
                 lista.append((adjacente, custo))
         return lista
 
+
     ##############################
     # devolve heuristica do nodo #
     ##############################
@@ -207,6 +208,38 @@ class Grafo:
                 min_estima = v
                 node = k
         return node
+
+
+    
+
+    
+    def nove(self, nodo):
+        aceleracoes_possiveis = [(0,0), (1,0), (0,1), (1,1), (-1,-1), (-1, 0), (0,-1), (-1,1), (1, -1)]
+        nodos_resultado = {}
+        for (aceleracao_x, aceleracao_y) in aceleracoes_possiveis:
+            nodo_final_x = nodo.m_x + nodo.velocity_x + aceleracao_x
+            nodo_final_y = nodo.m_y + nodo.velocity_y + aceleracao_y
+            
+            nodo_proximo = nodo(nodo_final_x, nodo_final_y, None)
+
+            if nodo_proximo in self.m_nodos :
+
+
+
+    
+    
+    def expande_grafo(self, nodo):
+
+        nodos_visitados = set()
+        nodos_a_visitar = []
+
+        nodos_a_visitar.append(self.nodo_inicial)
+
+        while(nodos_a_visitar):
+            nodo_atual = nodos_a_visitar.pop()
+            nove(nodo_atual)
+
+
 
     ############
     #    A*    #
