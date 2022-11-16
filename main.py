@@ -1,25 +1,22 @@
 from nodo import Nodo
 from grafo import Grafo
+import sys
 
 
 def main():
-   #n1 = Nodo(1,3,"X")
-   #n2 = Nodo(0,5,"-")
-   #n3 = Nodo(3,1,"X")
+   
+   # ficheiro linhas colunas
 
-   grafo = Grafo()
+    ficheiro = sys.argv[1]
+    linhas = int(sys.argv[2])
+    colunas = int(sys.argv[3])
 
-   grafo.parse("teste.txt")
+    mapa = Mapa(linhas, colunas)
 
-   grafo.add_heuristica()
+    mapa.parse(ficheiro)
 
+    print(mapa.__str__())
 
-   #print(grafo)
-   #print(grafo.m_nodos_objetivos)
-   #print(grafo.m_h)
-
-   print(grafo.procura_BFS(grafo.nodo_inicial, grafo.m_nodos_objetivos))
-   print(grafo.procura_aStar(grafo.nodo_inicial, grafo.m_nodos_objetivos))
 
 if __name__ == '__main__':
     main()
