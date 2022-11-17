@@ -16,6 +16,9 @@ class Grafo:
         self.m_h = {}  # dicionario para posterirmente armazenar as heuristicas para cada nodo -> pesquisa informada
         self.m_nodos_objetivos = []
 
+        # só utilizado para 
+        self.m_grafoAStar = {} # dicionário com os nodos e as areastas e custos variantes da aplicação do algoritmo A-star 
+
     ################################
     # Escrever o grafo como string #
     ################################
@@ -30,10 +33,12 @@ class Grafo:
         if nodo1 not in self.m_nodos:
             self.m_nodos.append(nodo1)
             self.m_grafo[nodo1] = set()
+            self.m_grafoAStar[nodo1] = set()
 
         if nodo2 not in self.m_nodos:
             self.m_nodos.append(nodo2)
             self.m_grafo[nodo2] = set()
+            self.m_grafoAStar[nodo2] = set()
 
         self.m_grafo[nodo1].add((nodo2, custo))
 
@@ -43,6 +48,33 @@ class Grafo:
         if char1 == "X" or char2 == "X":
             return 25
         else: return 1
+
+    def parse(self, ficheiro, bool_mapa):
+        x = 0
+        y = 0
+        f = open(ficheiro, 'r')
+        aux = {}
+        linhas = f.readlines()
+        for linha in linhas:
+            for char in linha:
+                if char != '\n':
+                    aux[(x,y)] = char
+                    n2 = Nodo(x, y , char, bool_mapa)
+                    if x - 1 >= 0:
+                        n1 = Nodo(x-1, y, aux[(x-1,y)], bool_mapa)
+                        custo = self.charCusto(aux[(x-1,y)],char)
+                        self.add_aresta(n1, n2, custo)
+                    if y - 1 >= 0:
+                        n1 = Nodo(x, y - 1, aux[(x, y - 1)], bool_mapa)
+                        custo = self.charCusto(aux[(x, y - 1)], char)
+                        self.add_aresta(n1, n2, custo)
+                    if char == 'F': # and n2 not in self.m_nodos_objetivos
+                        self.m_nodos_objetivos.append(n2)
+                    elif char == 'P':
+                        self.nodo_inicial = n2
+                y += 1
+            y = 0
+            x += 1
 
     ####################################
     # Calcular Distâncias de Manhattan #
@@ -74,9 +106,6 @@ class Grafo:
         for (nodo, custo) in a:
             if nodo == node2:
                 custoT = custo
-        print(node1)
-        print(node2)
-        print(custoT)
         return custoT
 
     ########################################
@@ -103,6 +132,7 @@ class Grafo:
     # Procura BFS #
     ###############
 
+    # Neste algoritmo, ignoram-se os 'X'
     def procura_BFS(self):
         # definir nodo final
         nodo_objetivo_final = None
@@ -130,7 +160,7 @@ class Grafo:
             else:
                 for (adjacente, custo) in self.m_grafo[nodo_atual]:
                     # print(adjacente)
-                    if adjacente not in visited:
+                    if adjacente not in visited and adjacente.m_char != 'X':
                         fila.put(adjacente)
                         parent[adjacente] = nodo_atual
                         visited.add(adjacente)
@@ -156,10 +186,14 @@ class Grafo:
     # Função   getAdjacentes, devolve vizinhos de um nó #
     #####################################################
 
-    def getAdjacentes(self, nodo):
+    def getAdjacentes(self, nodo, mapa):
+        '''  - Versão Antiga - 
         lista = []
         for (adjacente, custo) in self.m_grafo[nodo]:
             lista.append((adjacente, custo))
+        '''
+        lista = mapa.nove(nodo)
+        # print(lista)
         return lista
 
 
@@ -169,6 +203,7 @@ class Grafo:
 
     def getH(self, nodo):
         if nodo not in self.m_h.keys():
+            print(nodo)
             return math.inf
         else:
             return (self.m_h[nodo])
@@ -182,12 +217,39 @@ class Grafo:
                 min_estima = v
                 node = k
         return node
+    
+    ##################################
+    # Devolver o custo de uma aresta #
+    ##################################
+
+    def get_arc_cost_AStar(self, node1, node2):
+        custoT = math.inf
+        a = self.m_grafoAStar[node1]  # lista de arestas para aquele nodo
+        for (nodo, custo) in a:
+            if nodo == node2:
+                custoT = custo
+        return custoT
+
+    ########################################
+    #  Dado um caminho calcula o seu custo #
+    ########################################
+
+    def calcula_custo_AStar(self, caminho):
+        # caminho é uma lista de nodos
+        teste = caminho
+        custo = 0
+        i = 0
+        while i + 1 < len(teste):
+            custo = custo + self.get_arc_cost_AStar(teste[i], teste[i + 1])
+            #print(teste[i])
+            i = i + 1
+        return custo
 
     ############
     #    A*    #
     ############
 
-    def procura_aStar(self):
+    def procura_aStar(self, mapa):
         # open_list is a list of nodes which have been visited, but who's neighbors
         # haven't all been inspected, starts off with the start node
         # closed_list is a list of nodes which have been visited
@@ -236,15 +298,16 @@ class Grafo:
                 reconst_path.reverse()
 
                 #print('Path found: {}'.format(reconst_path))
-                return reconst_path, self.calcula_custo(reconst_path)
+                return reconst_path, self.calcula_custo_AStar(reconst_path)
 
             # for all neighbors of the current node do
-            for (m, weight) in self.getAdjacentes(n):  # definir função getneighbours  tem de ter um par nodo peso
+            for (m, weight) in self.getAdjacentes(n, mapa):  # definir função getneighbours  tem de ter um par nodo peso
                 # if the current node isn't in both open_list and closed_list
                 # add it to open_list and note n as it's parent
                 if m not in open_list and m not in closed_list:
                     open_list.add(m)
                     parents[m] = n
+                    self.m_grafoAStar[n].add((m, weight))
                     g[m] = g[n] + weight
 
                 # otherwise, check if it's quicker to first visit n, then m
@@ -255,6 +318,7 @@ class Grafo:
                     if g[m] > g[n] + weight:
                         g[m] = g[n] + weight
                         parents[m] = n
+                        self.m_grafoAStar[n].add((m, weight))
 
                         if m in closed_list:
                             closed_list.remove(m)

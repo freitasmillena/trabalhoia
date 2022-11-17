@@ -3,14 +3,21 @@
 # Cada nodo possui coordenadas x e y, bem como o caracter que representa e a heurística
 
 class Nodo:
-    def __init__(self, x, y, char):
+    def __init__(self, x, y, char, bool_velocidade):
         self.m_x = x
         self.m_y = y
         self.m_char = char
         self.v_x = 0
         self.v_y = 0
+        self.velocidade = bool_velocidade
+    
     def __str__(self):
-        return self.m_char + " (" + str(self.m_x) + "," + str(self.m_y) + ")" + " (" + str(self.v_x) + "," + str(self.v_y) + ")"
+        string = None
+        if self.velocidade == True :
+            string = self.m_char + " (" + str(self.m_x) + "," + str(self.m_y) + ") vel:[" + str(self.v_x) + "," + str(self.v_y)  + "] "
+        else :
+            string = self.m_char + " (" + str(self.m_x) + "," + str(self.m_y) + ") "
+        return string
 
     def __repr__(self):
         return self.m_char +  " (" + str(self.m_x) + "," + str(self.m_y) + ")"
