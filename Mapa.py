@@ -57,7 +57,7 @@ class Mapa:
                 v_final_y = 0
                 custo_final += 25
                 break
-            elif self.mapa[x][nodo.m_y].m_char != 'P':
+            else:
                 custo_final += 1
 
         y = nodo.m_y
@@ -73,7 +73,7 @@ class Mapa:
                 v_final_y = 0
                 custo_final += 25
                 break
-            elif self.mapa[nodo_final_x][y].m_char != 'P':
+            else:
                 custo_final += 1
 
         nodo_opt1 = self.mapa[nodo_final_x][nodo_final_y]
@@ -97,7 +97,7 @@ class Mapa:
                 v_final_y = 0
                 custo_final += 25
                 break
-            elif self.mapa[nodo_final_x][y].m_char != 'P':
+            else:
                 custo_final += 1
 
         x = nodo.m_x
@@ -113,7 +113,7 @@ class Mapa:
                 v_final_y = 0
                 custo_final += 25
                 break
-            elif self.mapa[x][nodo.m_y].m_char != 'P':
+            else:
                 custo_final += 1
 
         nodo_opt1 = self.mapa[nodo_final_x][nodo_final_y]
@@ -125,14 +125,14 @@ class Mapa:
         aceleracoes_possiveis = [(0, 0), (1, 0), (0, 1), (1, 1), (-1, -1), (-1, 0), (0, -1), (-1, 1), (1, -1)]
         nodos_resultado = []
         for (aceleracao_x, aceleracao_y) in aceleracoes_possiveis:
-            nodo_final_x = nodo.m_x + nodo.v_x + aceleracao_x
-            nodo_final_y = nodo.m_y + nodo.v_y + aceleracao_y
             v_final_x = nodo.v_x + aceleracao_x
             v_final_y = nodo.v_y + aceleracao_y
+            nodo_final_x = nodo.m_x + v_final_x
+            nodo_final_y = nodo.m_y + v_final_y
 
-            if 0 <= nodo_final_x < self.linhas and 0 <= nodo_final_y < self.colunas:
-                (n1,c1) = self.linhaColuna(nodo, nodo_final_x, nodo_final_y, v_final_x, v_final_y)
-                (n2,c2) = self.colunaLinha(nodo, nodo_final_x, nodo_final_y, v_final_x, v_final_y)
+            if 0 <= nodo_final_x < self.linhas and 0 <= nodo_final_y < self.colunas and self.mapa[nodo_final_x][nodo_final_y].m_char != 'P':
+                (n1, c1) = self.linhaColuna(nodo, nodo_final_x, nodo_final_y, v_final_x, v_final_y)
+                (n2, c2) = self.colunaLinha(nodo, nodo_final_x, nodo_final_y, v_final_x, v_final_y)
 
                 if c1 <= c2:
                     nodos_resultado.append(n1)
@@ -150,7 +150,6 @@ class Mapa:
         nodo_partida = self.mapa[self.xPartida][self.yPartida]
         self.grafo.nodo_inicial = nodo_partida
         nodos_a_visitar.append(nodo_partida)
-        print(nodo_partida)
         while (nodos_a_visitar):
             nodo_atual = nodos_a_visitar.pop()
             if nodo_atual not in nodos_visitados:
@@ -163,4 +162,3 @@ class Mapa:
                 nodos_visitados.add(nodo_atual)
 
         self.grafo.add_heuristica()
-        print(nodo_partida)

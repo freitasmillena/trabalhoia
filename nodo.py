@@ -10,7 +10,7 @@ class Nodo:
         self.v_x = 0
         self.v_y = 0
     def __str__(self):
-        return self.m_char + " (" + str(self.v_x) + "," + str(self.v_y) + ")"
+        return self.m_char + " (" + str(self.m_x) + "," + str(self.m_y) + ")" + " (" + str(self.v_x) + "," + str(self.v_y) + ")"
 
     def __repr__(self):
         return self.m_char +  " (" + str(self.m_x) + "," + str(self.m_y) + ")"
