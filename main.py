@@ -14,23 +14,26 @@ def main():
 
    # A incialização da estrtura Grafo só vai servir para algoritmos de pesquisa NÃO INFORMADA
    # Isto acontece porque neste tipo de algoritmos, não se considera a velocidade e acelração do veículo
+   '''
    grafo = Grafo ()
    grafo.parse("teste.txt", False)
    grafo.add_heuristica()
+   '''
 
    # Mapa só pode ser utilizado para algoritmos   grafo = Grafo ()
-   grafo_mapa = Grafo ()
-   grafo_mapa.parse("teste.txt", True)
-   grafo_mapa.add_heuristica()
-   m = Mapa(linhas, colunas, grafo)
+   # grafo_mapa = Grafo ()
+   # grafo_mapa.parse("teste.txt", True)
+   # grafo_mapa.add_heuristica()
+   m = Mapa(linhas, colunas)
    m.parse(ficheiro)
-   #m.expande_grafo()
+   m.expande_grafo()
+   m.grafo.add_heuristica()
 
    saida = -1
 
    while saida != 0:
       print("")
-      print("1-Imprimir Grafo")
+      print("1-Desenhar Grafo")
       print("2-Imprimir Nodos do Grafo")
       print("3-BFS")
       print("4-A-star")
@@ -40,17 +43,17 @@ def main():
       if saida == 0:
          print("saindo.......")
       elif saida == 1:
-         print(grafo.m_grafo)
+         print(m.grafo)
          l=input("prima enter para continuar")
       elif saida == 2:
-         print(grafo.m_grafo.keys())
+         print(m.grafo.m_nodos)
          l = input("prima enter para continuar")
       elif saida == 3:
-         resultBFS, custoTotalBFS = grafo.procura_BFS()
+         resultBFS, custoTotalBFS = m.grafo.procura_BFS()
          print(resultBFS, custoTotalBFS)
          l = input("prima enter para continuar")
       elif saida == 4:
-         resultAStar, custoTotalAStar = m.grafo.procura_aStar(m)
+         resultAStar, custoTotalAStar = m.grafo.procura_aStar()
          print(resultAStar, custoTotalAStar)
          l = input("prima enter para continuar")
       else:

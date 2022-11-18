@@ -13,11 +13,8 @@ class Grafo:
         self.m_nodos = []
         self.nodo_inicial = None
         self.m_grafo = {}  # dicionario para armazenar os nodos e arestas
-        self.m_h = {}  # dicionario para posterirmente armazenar as heuristicas para cada nodo -> pesquisa informada
+        self.m_h = {}  # dicionario para posteriormente armazenar as heuristicas para cada nodo -> pesquisa informada
         self.m_nodos_objetivos = []
-
-        # só utilizado para 
-        self.m_grafoAStar = {} # dicionário com os nodos e as areastas e custos variantes da aplicação do algoritmo A-star 
 
     ################################
     # Escrever o grafo como string #
@@ -33,22 +30,22 @@ class Grafo:
         if nodo1 not in self.m_nodos:
             self.m_nodos.append(nodo1)
             self.m_grafo[nodo1] = set()
-            self.m_grafoAStar[nodo1] = set()
 
         if nodo2 not in self.m_nodos:
             self.m_nodos.append(nodo2)
             self.m_grafo[nodo2] = set()
-            self.m_grafoAStar[nodo2] = set()
 
         self.m_grafo[nodo1].add((nodo2, custo))
 
-        self.m_grafo[nodo2].add((nodo1, custo))
+        # self.m_grafo[nodo2].add((nodo1, custo)) -> confirmar se é direcionado ou não direcionado
 
-    def charCusto(self,  char1, char2):
+    def charCusto(self, char1, char2):
         if char1 == "X" or char2 == "X":
             return 25
-        else: return 1
+        else:
+            return 1
 
+    '''
     def parse(self, ficheiro, bool_mapa):
         x = 0
         y = 0
@@ -58,23 +55,24 @@ class Grafo:
         for linha in linhas:
             for char in linha:
                 if char != '\n':
-                    aux[(x,y)] = char
-                    n2 = Nodo(x, y , char, bool_mapa)
+                    aux[(x, y)] = char
+                    n2 = Nodo(x, y, char, bool_mapa)
                     if x - 1 >= 0:
-                        n1 = Nodo(x-1, y, aux[(x-1,y)], bool_mapa)
-                        custo = self.charCusto(aux[(x-1,y)],char)
+                        n1 = Nodo(x - 1, y, aux[(x - 1, y)], bool_mapa)
+                        custo = self.charCusto(aux[(x - 1, y)], char)
                         self.add_aresta(n1, n2, custo)
                     if y - 1 >= 0:
                         n1 = Nodo(x, y - 1, aux[(x, y - 1)], bool_mapa)
                         custo = self.charCusto(aux[(x, y - 1)], char)
                         self.add_aresta(n1, n2, custo)
-                    if char == 'F': # and n2 not in self.m_nodos_objetivos
+                    if char == 'F':  # and n2 not in self.m_nodos_objetivos
                         self.m_nodos_objetivos.append(n2)
                     elif char == 'P':
                         self.nodo_inicial = n2
                 y += 1
             y = 0
             x += 1
+    '''
 
     ####################################
     # Calcular Distâncias de Manhattan #
@@ -82,13 +80,14 @@ class Grafo:
 
     def distManhattan(self, nodo):
         dist_menor = math.inf
-        for objetivo in self.m_nodos_objetivos:  
-            aux = abs(objetivo.m_x - nodo.m_x) + abs(objetivo.m_y - nodo.m_y)
+        for (x, y) in self.m_nodos_objetivos:
+            aux = abs(x - nodo.m_x) + abs(y - nodo.m_y)
             if aux < dist_menor:
                 dist_menor = aux
-        return dist_menor 
+        return dist_menor
 
-    ##############
+        ##############
+
     # Heuristica #
     ##############
 
@@ -119,15 +118,40 @@ class Grafo:
         i = 0
         while i + 1 < len(teste):
             custo = custo + self.get_arc_cost(teste[i], teste[i + 1])
-            #print(teste[i])
+            # print(teste[i])
             i = i + 1
         return custo
 
+    def nodoCoords(self, nodo):
+        return nodo.m_x, nodo.m_y
+
+    '''
+    def desenha(self):
+        ##criar lista de vertices
+        lista_v = self.m_nodes
+        lista_a = []
+        g = nx.Graph()
+        for nodo in lista_v:
+            n = nodo.getName()
+            g.add_node(n)
+            for (adjacente, peso) in self.m_graph[n]:
+                lista = (n, adjacente)
+                # lista_a.append(lista)
+                g.add_edge(n, adjacente, weight=peso)
+
+        pos = nx.spring_layout(g)
+        nx.draw_networkx(g, pos, with_labels=True, font_weight='bold')
+        labels = nx.get_edge_attributes(g, 'weight')
+        nx.draw_networkx_edge_labels(g, pos, edge_labels=labels)
+
+        plt.draw()
+        plt.show()
+    '''
 
     #########################
     # Algoritmos de Procura #
     #########################
-    
+
     ###############
     # Procura BFS #
     ###############
@@ -154,17 +178,16 @@ class Grafo:
             # print("visitou")
             nodo_atual = fila.get()
             # print(nodo_atual)
-            if nodo_atual in self.m_nodos_objetivos:
+            if self.nodoCoords(nodo_atual) in self.m_nodos_objetivos:
                 path_found = True
                 nodo_objetivo_final = nodo_atual
             else:
                 for (adjacente, custo) in self.m_grafo[nodo_atual]:
                     # print(adjacente)
-                    if adjacente not in visited and adjacente.m_char != 'X':
+                    if adjacente not in visited:
                         fila.put(adjacente)
                         parent[adjacente] = nodo_atual
                         visited.add(adjacente)
-                
 
         # Reconstruir o caminho
 
@@ -186,16 +209,15 @@ class Grafo:
     # Função   getAdjacentes, devolve vizinhos de um nó #
     #####################################################
 
-    def getAdjacentes(self, nodo, mapa):
-        '''  - Versão Antiga - 
+    def getAdjacentes(self, nodo):
+        #  - Versão Antiga -
         lista = []
         for (adjacente, custo) in self.m_grafo[nodo]:
             lista.append((adjacente, custo))
-        '''
-        lista = mapa.nove(nodo)
+
+        # lista = mapa.nove(nodo)
         # print(lista)
         return lista
-
 
     ##############################
     # devolve heuristica do nodo #
@@ -206,7 +228,7 @@ class Grafo:
             print(nodo)
             return math.inf
         else:
-            return (self.m_h[nodo])
+            return self.m_h[nodo]
 
     def calcula_est(self, estima):
         l = list(estima.keys())
@@ -217,7 +239,7 @@ class Grafo:
                 min_estima = v
                 node = k
         return node
-    
+
     ##################################
     # Devolver o custo de uma aresta #
     ##################################
@@ -241,7 +263,7 @@ class Grafo:
         i = 0
         while i + 1 < len(teste):
             custo = custo + self.get_arc_cost_AStar(teste[i], teste[i + 1])
-            #print(teste[i])
+            # print(teste[i])
             i = i + 1
         return custo
 
@@ -249,7 +271,7 @@ class Grafo:
     #    A*    #
     ############
 
-    def procura_aStar(self, mapa):
+    def procura_aStar(self):
         # open_list is a list of nodes which have been visited, but who's neighbors
         # haven't all been inspected, starts off with the start node
         # closed_list is a list of nodes which have been visited
@@ -259,7 +281,7 @@ class Grafo:
 
         # g contains current distances from start_node to all other nodes
         # the default value (if it's not found in the map) is +infinity
-        g = {} 
+        g = {}
 
         g[self.nodo_inicial] = 0
 
@@ -285,8 +307,8 @@ class Grafo:
                 return None
 
             # if the current node is the stop_node
-            # then we begin reconstructin the path from it to the inicial_node
-            if n in self.m_nodos_objetivos:
+            # then we begin reconstructing the path from it to the inicial_node
+            if self.nodoCoords(n) in self.m_nodos_objetivos:
                 reconst_path = []
 
                 while parents[n] != n:
@@ -297,17 +319,17 @@ class Grafo:
 
                 reconst_path.reverse()
 
-                #print('Path found: {}'.format(reconst_path))
-                return reconst_path, self.calcula_custo_AStar(reconst_path)
+                # print('Path found: {}'.format(reconst_path))
+                return reconst_path, self.calcula_custo(reconst_path)
 
             # for all neighbors of the current node do
-            for (m, weight) in self.getAdjacentes(n, mapa):  # definir função getneighbours  tem de ter um par nodo peso
+            for (m, weight) in self.getAdjacentes(n):  # definir função getneighbours  tem de ter um par nodo peso
                 # if the current node isn't in both open_list and closed_list
                 # add it to open_list and note n as it's parent
                 if m not in open_list and m not in closed_list:
                     open_list.add(m)
                     parents[m] = n
-                    self.m_grafoAStar[n].add((m, weight))
+                    # self.m_grafoAStar[n].add((m, weight))
                     g[m] = g[n] + weight
 
                 # otherwise, check if it's quicker to first visit n, then m
@@ -318,7 +340,7 @@ class Grafo:
                     if g[m] > g[n] + weight:
                         g[m] = g[n] + weight
                         parents[m] = n
-                        self.m_grafoAStar[n].add((m, weight))
+                        # self.m_grafoAStar[n].add((m, weight))
 
                         if m in closed_list:
                             closed_list.remove(m)
@@ -331,4 +353,3 @@ class Grafo:
 
         print('Path does not exist!')
         return None
-    
