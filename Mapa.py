@@ -42,7 +42,7 @@ class Mapa:
             x += 1
 
     # Cálculo do nodo anterior a um X, vendo que a velocidade segue primeiro a linha, e depois a coluna
-    def linhaColuna(self, nodo, nodo_final_x, nodo_final_y, v_final_x, v_final_y):
+    def linhaColuna(self, nodo, nodo_final_x, nodo_final_y, v_final_x, v_final_y, ax, ay):
         # Como só pode ser inserido um dos dois custos (25 ou 1), é melhor criar um booleano que indica se encontrou algum X
         obstaculo = False
 
@@ -66,7 +66,10 @@ class Mapa:
                 custo_final += 1
 
         y = nodo.m_y
-        if obstaculo is False:
+
+        if obstaculo is True: 
+            nodo_opt1 = Nodo(nodo_final_x, y, self.mapa[nodo_final_x][y], v_final_x, v_final_y, ax, ay, "lc")
+        else:
             while y != nodo_final_y:
                 ant = y
                 if y < nodo_final_y:
@@ -83,10 +86,11 @@ class Mapa:
                 else:
                     custo_final += 1
 
-        nodo_opt1 = Nodo(x, y, self.mapa[x][y], v_final_x, v_final_y, "lc")
+            nodo_opt1 = Nodo(nodo_final_x, nodo_final_y, self.mapa[nodo_final_x][nodo_final_y], v_final_x, v_final_y, ax, ay, "lc")
+        
         return nodo_opt1, custo_final
 
-    def colunaLinha(self, nodo, nodo_final_x, nodo_final_y, v_final_x, v_final_y):
+    def colunaLinha(self, nodo, nodo_final_x, nodo_final_y, v_final_x, v_final_y, ax, ay):
         # Como só pode ser inserido um dos dois custos (25 ou 1), é melhor criar um booleano que indica se encontrou algum X
         obstaculo = False
 
@@ -109,7 +113,10 @@ class Mapa:
                 custo_final += 1
 
         x = nodo.m_x
-        if obstaculo is False:
+
+        if obstaculo is True: 
+            nodo_opt1 = Nodo(x, nodo_final_y, self.mapa[x][nodo_final_y], v_final_x, v_final_y, ax, ay, "lc")
+        else:
             while x != nodo_final_x:
                 ant = x
                 if x < nodo_final_x:
@@ -127,7 +134,7 @@ class Mapa:
                 else:
                     custo_final += 1
 
-        nodo_opt1 = Nodo(x, y, self.mapa[x][y], v_final_x, v_final_y, "cl")
+            nodo_opt1 = Nodo(nodo_final_x, nodo_final_y, self.mapa[nodo_final_x][nodo_final_y], v_final_x, v_final_y, ax, ay, "cl")
 
         return nodo_opt1, custo_final
 
@@ -146,8 +153,8 @@ class Mapa:
 
             if 0 <= nodo_final_x < self.linhas and 0 <= nodo_final_y < self.colunas and self.mapa[nodo_final_x][
                 nodo_final_y] != 'P':
-                (n1, c1) = self.linhaColuna(nodo, nodo_final_x, nodo_final_y, v_final_x, v_final_y)
-                (n2, c2) = self.colunaLinha(nodo, nodo_final_x, nodo_final_y, v_final_x, v_final_y)
+                (n1, c1) = self.linhaColuna(nodo, nodo_final_x, nodo_final_y, v_final_x, v_final_y, aceleracao_x, aceleracao_y)
+                (n2, c2) = self.colunaLinha(nodo, nodo_final_x, nodo_final_y, v_final_x, v_final_y, aceleracao_x, aceleracao_y)
 
                 if c1 <= c2:
                     nodos_resultado.append(n1)
@@ -181,3 +188,43 @@ class Mapa:
 
         self.grafo.add_heuristica()
         # print(nodo_partida)
+
+    def expande_caminho(self, caminho):
+        result = ""
+        ant = None
+        for nodo in caminho:
+            if ant is None:
+                result += nodo.m_char + " (" + str(nodo.m_x) + "," + str(nodo.m_y) + ") "
+            else:
+                x = ant.m_x
+                y = ant.m_y
+                x_final = nodo.m_x
+                y_final = nodo.m_y
+                if nodo.trajetoria == "cl":
+                    while y != y_final:
+                        if y < y_final:
+                            y += 1
+                        else:
+                            y -= 1
+                        result += self.mapa[x][y] + " (" + str(x) + "," + str(y) + ") "
+                    while x != x_final:
+                        if x < x_final:
+                            x += 1
+                        else:
+                            x -= 1
+                        result += self.mapa[x][y] + " (" + str(x) + "," + str(y) + ") "
+                else: # lc
+                    while x != x_final:
+                        if x < x_final:
+                            x += 1
+                        else:
+                            x -= 1
+                        result += self.mapa[x][y] + " (" + str(x) + "," + str(y) + ") "
+                    while y != y_final:
+                        if y < y_final:
+                            y += 1
+                        else:
+                            y -= 1
+                        result += self.mapa[x][y] + " (" + str(x) + "," + str(y) + ") "
+            ant = nodo
+        return result

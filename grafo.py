@@ -1,8 +1,8 @@
 import math
 from queue import Queue
 
-# import networkx as nx  # biblioteca de tratamento de grafos necessária para desnhar graficamente o grafo
-# import matplotlib.pyplot as plt  # idem
+import networkx as nx  # biblioteca de tratamento de grafos necessária para desenhar graficamente o grafo
+import matplotlib.pyplot as plt  # idem
 
 from nodo import Nodo
 
@@ -125,19 +125,17 @@ class Grafo:
     def nodoCoords(self, nodo):
         return nodo.m_x, nodo.m_y
 
-    '''
     def desenha(self):
         ##criar lista de vertices
-        lista_v = self.m_nodes
+        lista_v = self.m_nodos
         lista_a = []
         g = nx.Graph()
         for nodo in lista_v:
-            n = nodo.getName()
-            g.add_node(n)
-            for (adjacente, peso) in self.m_graph[n]:
-                lista = (n, adjacente)
+            g.add_node(nodo)
+            for (adjacente, peso) in self.m_grafo[nodo]:
+                lista = (nodo, adjacente)
                 # lista_a.append(lista)
-                g.add_edge(n, adjacente, weight=peso)
+                g.add_edge(nodo, adjacente, weight=peso)
 
         pos = nx.spring_layout(g)
         nx.draw_networkx(g, pos, with_labels=True, font_weight='bold')
@@ -146,7 +144,6 @@ class Grafo:
 
         plt.draw()
         plt.show()
-    '''
 
     #########################
     # Algoritmos de Procura #
@@ -204,6 +201,27 @@ class Grafo:
             return (path, custo)
         else:
             return (path, 0)
+
+    #######
+    # DFS #
+    #######
+
+    def procura_DFS(self, start, path=[], visited=set()):
+        path.append(start)
+        visited.add(start)
+
+        if self.nodoCoords(start) in self.m_nodos_objetivos:
+            # calcular o custo do caminho funçao calcula custo.
+            custoT = self.calcula_custo(path)
+            return (path, custoT)
+        for (adjacente, peso) in self.m_grafo[start]:
+            if adjacente not in visited:
+                resultado = self.procura_DFS(adjacente, path, visited)
+                if resultado is not None:
+                    return resultado
+        path.pop()  # se nao encontra remover o que está no caminho......
+        return None
+
 
     #####################################################
     # Função   getAdjacentes, devolve vizinhos de um nó #
@@ -348,6 +366,67 @@ class Grafo:
 
             # remove n from the open_list, and add it to closed_list
             # because all of his neighbors were inspected
+            open_list.remove(n)
+            closed_list.add(n)
+
+        print('Path does not exist!')
+        return None
+
+    ##########
+    # Greedy #
+    ##########
+
+    def greedy(self):
+        # open_list é uma lista de nodos visitados, mas com vizinhos
+        # que ainda não foram todos visitados, começa com o  start
+        # closed_list é uma lista de nodos visitados
+        # e todos os seus vizinhos também já o foram
+        open_list = set([self.nodo_inicial])
+        closed_list = set([])
+
+        # parents é um dicionário que mantém o antecessor de um nodo
+        # começa com start
+        parents = {}
+        parents[self.nodo_inicial] = self.nodo_inicial
+
+        while len(open_list) > 0:
+            n = None
+
+            # encontraf nodo com a menor heuristica
+            for v in open_list:
+                if n == None or self.m_h[v] < self.m_h[n]:
+                    n = v
+
+            if n == None:
+                print('Path does not exist!')
+                return None
+
+            # se o nodo corrente é o destino
+            # reconstruir o caminho a partir desse nodo até ao start
+            # seguindo o antecessor
+            if self.nodoCoords(n) in self.m_nodos_objetivos:
+                reconst_path = []
+
+                while parents[n] != n:
+                    reconst_path.append(n)
+                    n = parents[n]
+
+                reconst_path.append(self.nodo_inicial)
+
+                reconst_path.reverse()
+
+                return (reconst_path, self.calcula_custo(reconst_path))
+
+            # para todos os vizinhos  do nodo corrente
+            for (m, weight) in self.getAdjacentes(n):
+                # Se o nodo corrente nao esta na open nem na closed list
+                # adiciona-lo à open_list e marcar o antecessor
+                if m not in open_list and m not in closed_list:
+                    open_list.add(m)
+                    parents[m] = n
+
+            # remover n da open_list e adiciona-lo à closed_list
+            # porque todos os seus vizinhos foram inspecionados
             open_list.remove(n)
             closed_list.add(n)
 

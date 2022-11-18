@@ -2,15 +2,18 @@ from Mapa import Mapa
 from nodo import Nodo
 from grafo import Grafo
 import sys
-
+from ficheiro import Ficheiro
 
 def main():
    
    # ficheiro linhas colunas
-
-   ficheiro = "teste.txt" #sys.argv[1]
-   linhas = 7 #int(sys.argv[2])
-   colunas = 10 #int(sys.argv[3])
+   path_ficheiro = sys.argv[1]
+   #print(path_ficheiro)
+   ficheiro = Ficheiro()
+   ficheiro.calculaLC(path_ficheiro)
+   linhas = ficheiro.linhas #int(sys.argv[2])
+   colunas = ficheiro.colunas #30 #int(sys.argv[3])
+   #print(linhas, colunas)
 
    # A incialização da estrtura Grafo só vai servir para algoritmos de pesquisa NÃO INFORMADA
    # Isto acontece porque neste tipo de algoritmos, não se considera a velocidade e acelração do veículo
@@ -24,10 +27,12 @@ def main():
    # grafo_mapa = Grafo ()
    # grafo_mapa.parse("teste.txt", True)
    # grafo_mapa.add_heuristica()
+
    m = Mapa(linhas, colunas)
-   m.parse(ficheiro)
+   m.parse(path_ficheiro)
    m.expande_grafo()
    m.grafo.add_heuristica()
+
 
    saida = -1
 
@@ -35,31 +40,44 @@ def main():
       print("")
       print("1-Desenhar Grafo")
       print("2-Imprimir Nodos do Grafo")
-      print("3-BFS")
-      print("4-A-star")
+      print("3-DFS")
+      print("4-BFS")
+      print("5-A-star")
+      print("6-Greedy")
       print("0-Sair")
 
       saida = int(input("introduza a sua opcao-> "))
       if saida == 0:
          print("saindo.......")
       elif saida == 1:
-         print(m.grafo)
+         m.grafo.desenha()
          l=input("prima enter para continuar")
       elif saida == 2:
          print(m.grafo.m_nodos)
          l = input("prima enter para continuar")
       elif saida == 3:
-         resultBFS, custoTotalBFS = m.grafo.procura_BFS()
-         print(resultBFS, custoTotalBFS)
+         resultDFS, custoTotalDFS = m.grafo.procura_DFS(m.grafo.nodo_inicial)
+         print("Resultado: " + str(resultDFS) + "\nCusto: " + str(custoTotalDFS))
+         print("Resultado expandido: " + str(m.expande_caminho(resultDFS)))
          l = input("prima enter para continuar")
       elif saida == 4:
-         resultAStar, custoTotalAStar = m.grafo.procura_aStar()
-         print(resultAStar, custoTotalAStar)
+         resultBFS, custoTotalBFS = m.grafo.procura_BFS()
+         print("Resultado: " + str(resultBFS) + "\nCusto: " + str(custoTotalBFS))
+         print("Resultado expandido: " + str(m.expande_caminho(resultBFS)))
          l = input("prima enter para continuar")
+      elif saida == 5:
+         resultAStar, custoTotalAStar = m.grafo.procura_aStar()
+         print("Resultado: " + str(resultAStar) + "\nCusto: " + str(custoTotalAStar))
+         print("Resultado expandido: " + str(m.expande_caminho(resultAStar)))
+         l = input("prima enter para continuar")
+      elif saida == 6:
+         resultGreedy, custoTotalGreedy = m.grafo.greedy()
+         print("Resultado: " + str(resultGreedy) + "\nCusto: " + str(custoTotalGreedy))
+         print("Resultado expandido: " + str(m.expande_caminho(resultGreedy)))
+         l = input("prima enter para continuar")      
       else:
          print("you didn't add anything")
          l = input("prima enter para continuar")
-
 
 
 if __name__ == '__main__':
