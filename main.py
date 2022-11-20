@@ -58,22 +58,26 @@ def main():
       elif saida == 3:
          resultDFS, custoTotalDFS = m.grafo.procura_DFS(m.grafo.nodo_inicial)
          print("Resultado: " + str(resultDFS) + "\nCusto: " + str(custoTotalDFS))
-         print("Resultado expandido: " + str(m.expande_caminho(resultDFS)))
+         resultDFSExpand, timeDFS = m.expande_caminho(resultDFS)
+         print("Resultado expandido: " + str(resultDFSExpand) + "\nTempo: " + str(timeDFS))
          l = input("prima enter para continuar")
       elif saida == 4:
          resultBFS, custoTotalBFS = m.grafo.procura_BFS()
          print("Resultado: " + str(resultBFS) + "\nCusto: " + str(custoTotalBFS))
-         print("Resultado expandido: " + str(m.expande_caminho(resultBFS)))
+         resultBFSExpand, timeBFS = m.expande_caminho(resultBFS)
+         print("Resultado expandido: " + str(resultBFSExpand) + "\nTempo: " + str(timeBFS))
          l = input("prima enter para continuar")
       elif saida == 5:
          resultAStar, custoTotalAStar = m.grafo.procura_aStar()
          print("Resultado: " + str(resultAStar) + "\nCusto: " + str(custoTotalAStar))
-         print("Resultado expandido: " + str(m.expande_caminho(resultAStar)))
+         resultAStarExpand, timeAStar = m.expande_caminho(resultAStar)
+         print("Resultado expandido: " + str(resultAStarExpand) + "\nTempo: " + str(timeAStar))
          l = input("prima enter para continuar")
       elif saida == 6:
          resultGreedy, custoTotalGreedy = m.grafo.greedy()
          print("Resultado: " + str(resultGreedy) + "\nCusto: " + str(custoTotalGreedy))
-         print("Resultado expandido: " + str(m.expande_caminho(resultGreedy)))
+         resultGreedyExpand, timeGreedy = m.expande_caminho(resultGreedy)
+         print("Resultado expandido: " + str(resultGreedyExpand) + "\nTempo: " + str(timeGreedy))
          l = input("prima enter para continuar")      
       else:
          print("you didn't add anything")

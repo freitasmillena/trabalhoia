@@ -16,7 +16,7 @@ class Nodo:
         return self.m_char + " (" + str(self.m_x) + "," + str(self.m_y) + ")"
 
     def __repr__(self):
-        string = self.m_char + " (" + str(self.m_x) + "," + str(self.m_y) + ") " + " (" + str(self.v_x) + "," + str(self.v_y) + ") " + " (" + str(self.a_x) + "," + str(self.a_y) + ") "
+        string = "\n" + self.m_char + " p(" + str(self.m_x) + "," + str(self.m_y) + ") " + " v(" + str(self.v_x) + "," + str(self.v_y) + ") " + " a(" + str(self.a_x) + "," + str(self.a_y) + ")"
         return string
 
     def getX(self):

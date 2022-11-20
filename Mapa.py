@@ -192,10 +192,21 @@ class Mapa:
     def expande_caminho(self, caminho):
         result = ""
         ant = None
+        tempo = 0
         for nodo in caminho:
             if ant is None:
                 result += nodo.m_char + " (" + str(nodo.m_x) + "," + str(nodo.m_y) + ") "
             else:
+                dx = abs(nodo.m_x - ant.m_x)
+                dy = abs(nodo.m_y - ant.m_y)
+                vx = abs(nodo.v_x)
+                vy = abs(nodo.v_y)
+                if vx == 0 and vy != 0:
+                    tempo += dy/vy
+                elif vx != 0 and vy == 0:
+                    tempo += dx/vx
+                elif vx != 0 and vy != 0:
+                    tempo += dx/vx + dy/vy
                 x = ant.m_x
                 y = ant.m_y
                 x_final = nodo.m_x
@@ -227,4 +238,6 @@ class Mapa:
                             y -= 1
                         result += self.mapa[x][y] + " (" + str(x) + "," + str(y) + ") "
             ant = nodo
-        return result
+        return result, tempo
+    
+        
