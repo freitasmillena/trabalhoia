@@ -46,8 +46,8 @@ def main():
 
    while saida != 0:
       print("")
-      print("1-Desenhar Grafo")
-      print("2-Imprimir Nodos do Grafo")
+      print("1-Desenhar Grafo do Mapa")
+      print("2-Desenhar Grafo da Expansão")
       print("3-DFS")
       print("4-BFS")
       print("5-A-star")
@@ -58,10 +58,10 @@ def main():
       if saida == 0:
          print("saindo.......")
       elif saida == 1:
-         m.grafo.desenha()
+         m.grafo_mapa.desenha()
          l=input("prima enter para continuar")
       elif saida == 2:
-         print(m.grafo.m_nodos)
+         m.grafo.desenha()
          l = input("prima enter para continuar")
       elif saida == 3:
          resultDFS, custoTotalDFS = m.grafo.procura_DFS(m.grafo.nodo_inicial)

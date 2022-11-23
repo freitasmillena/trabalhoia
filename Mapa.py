@@ -12,6 +12,7 @@ class Mapa:
         self.colunas = coluna
         self.mapa = [[0 for x in range(self.colunas)] for y in range(self.linhas)]
         self.grafo = Grafo()
+        self.grafo_mapa = Grafo()
 
     def __str__(self):
         out = ""
@@ -22,15 +23,38 @@ class Mapa:
 
         return out
 
+    def charCusto(self,  char1, char2):
+        if char1 == "X" or char2 == "X":
+            return 25
+        else: return 1
+
     def parse(self, ficheiro):
         x = 0
         y = 0
         f = open(ficheiro, 'r')
+        aux = {}
         linhas = f.readlines()
         for linha in linhas:
             for char in linha:
                 if char != '\n':
+                    # matriz
                     self.mapa[x][y] = char  # adiciona apenas qual o char
+                    # grafo
+                    aux[(x,y)] = char
+                    n2 = Nodo(x, y , char)
+
+                    if x - 1 >= 0:
+                        n1 = Nodo(x-1, y, aux[(x-1,y)])
+                        custo = self.charCusto(aux[(x-1,y)],char)
+                        self.grafo_mapa.add_aresta(n1, n2, custo)
+                        self.grafo_mapa.add_aresta(n2, n1, custo)
+
+                    if y - 1 >= 0:
+                        n1 = Nodo(x, y - 1, aux[(x, y - 1)])
+                        custo = self.charCusto(aux[(x, y - 1)], char)
+                        self.grafo_mapa.add_aresta(n1, n2, custo)
+                        self.grafo_mapa.add_aresta(n2, n1, custo)
+
                 if char == 'P':
                     self.xPartida = x
                     self.yPartida = y
