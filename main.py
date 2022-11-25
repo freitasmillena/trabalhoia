@@ -6,9 +6,9 @@ import os
 from ficheiro import Ficheiro
 import pickle
 
+# recebe como argumentos: ficheiro linhas colunas
 def main():
 
-   # ficheiro linhas colunas
    path_ficheiro = sys.argv[1]
 
    nome_ficheiro = path_ficheiro.split('.')[0]
@@ -18,19 +18,15 @@ def main():
    m = None
 
    if isExist :
-      #print("if")
       file = open(bin_ficheiro, 'rb')
       m = pickle.load(file)
       file.close()
 
    else:
-      #print("else")
-      #print(path_ficheiro)
       ficheiro = Ficheiro()
       ficheiro.calculaLC(path_ficheiro)
       linhas = ficheiro.linhas #int(sys.argv[2])
-      colunas = ficheiro.colunas #30 #int(sys.argv[3])
-      #print(linhas, colunas)
+      colunas = ficheiro.colunas #int(sys.argv[3])
 
       m = Mapa(linhas, colunas)
       m.parse(path_ficheiro)
@@ -44,6 +40,7 @@ def main():
 
    saida = -1
 
+   # menu de opções
    while saida != 0:
       print("")
       print("1-Desenhar Grafo do Mapa")
