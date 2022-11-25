@@ -4,7 +4,11 @@ from queue import Queue
 import networkx as nx  # biblioteca de tratamento de grafos necessária para desenhar graficamente o grafo
 import matplotlib.pyplot as plt  # idem
 
+
 from nodo import Nodo
+
+
+
 
 
 class Grafo:
@@ -138,9 +142,9 @@ class Grafo:
                 g.add_edge(nodo, adjacente, weight=peso)
 
         pos = nx.spring_layout(g)
-        nx.draw_networkx(g, pos, with_labels=True, font_weight='bold')
+        nx.draw_networkx(g, pos, with_labels=True, font_weight='bold', font_size = 5)
         labels = nx.get_edge_attributes(g, 'weight')
-        nx.draw_networkx_edge_labels(g, pos, edge_labels=labels)
+        nx.draw_networkx_edge_labels(g, pos, edge_labels=labels, font_size = 5)
 
         plt.draw()
         plt.show()
