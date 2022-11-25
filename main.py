@@ -6,7 +6,7 @@ import os
 from ficheiro import Ficheiro
 import pickle
 
-# recebe como argumentos: ficheiro linhas colunas
+# recebe como argumento o ficheiro
 def main():
 
    path_ficheiro = sys.argv[1]
@@ -24,9 +24,10 @@ def main():
 
    else:
       ficheiro = Ficheiro()
-      ficheiro.calculaLC(path_ficheiro)
-      linhas = ficheiro.linhas #int(sys.argv[2])
-      colunas = ficheiro.colunas #int(sys.argv[3])
+      # calcula o número de linhas e colunas do ficheiro
+      ficheiro.calculaLC(path_ficheiro) 
+      linhas = ficheiro.linhas
+      colunas = ficheiro.colunas
 
       m = Mapa(linhas, colunas)
       m.parse(path_ficheiro)
