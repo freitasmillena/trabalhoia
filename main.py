@@ -1,3 +1,4 @@
+import time
 from Mapa import Mapa
 from nodo import Nodo
 from grafo import Grafo
@@ -62,28 +63,40 @@ def main():
          m.grafo.desenha()
          l = input("prima enter para continuar")
       elif saida == 3:
+         t_start=time.time()
          resultDFS, custoTotalDFS = m.grafo.procura_DFS(m.grafo.nodo_inicial)
+         t_end=time.time()
          print("Resultado: " + str(resultDFS) + "\nCusto: " + str(custoTotalDFS))
          resultDFSExpand, timeDFS = m.expande_caminho(resultDFS)
          print("Resultado expandido: " + str(resultDFSExpand) + "\nTempo: " + str(timeDFS))
+         print("Tempo para encontrar a solução: " + str( round((t_end-t_start)*1000,2) )+ " ms")
          l = input("prima enter para continuar")
       elif saida == 4:
+         t_start=time.time()
          resultBFS, custoTotalBFS = m.grafo.procura_BFS()
+         t_end=time.time()
          print("Resultado: " + str(resultBFS) + "\nCusto: " + str(custoTotalBFS))
          resultBFSExpand, timeBFS = m.expande_caminho(resultBFS)
          print("Resultado expandido: " + str(resultBFSExpand) + "\nTempo: " + str(timeBFS))
+         print("Tempo para encontrar a solução: " + str(round((t_end-t_start)*1000,2))+ " ms")
          l = input("prima enter para continuar")
       elif saida == 5:
+         t_start=time.time()
          resultAStar, custoTotalAStar = m.grafo.procura_aStar()
+         t_end=time.time()
          print("Resultado: " + str(resultAStar) + "\nCusto: " + str(custoTotalAStar))
          resultAStarExpand, timeAStar = m.expande_caminho(resultAStar)
          print("Resultado expandido: " + str(resultAStarExpand) + "\nTempo: " + str(timeAStar))
+         print("Tempo para encontrar a solução: " + str( round((t_end-t_start)*1000,2) )+ " ms")
          l = input("prima enter para continuar")
       elif saida == 6:
+         t_start=time.time()
          resultGreedy, custoTotalGreedy = m.grafo.greedy()
+         t_end=time.time()
          print("Resultado: " + str(resultGreedy) + "\nCusto: " + str(custoTotalGreedy))
          resultGreedyExpand, timeGreedy = m.expande_caminho(resultGreedy)
          print("Resultado expandido: " + str(resultGreedyExpand) + "\nTempo: " + str(timeGreedy))
+         print("Tempo para encontrar a solução: " + str( round((t_end-t_start)*1000,2) )+ " ms")
          l = input("prima enter para continuar")      
       else:
          print("you didn't add anything")
