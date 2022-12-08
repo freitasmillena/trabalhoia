@@ -6,7 +6,9 @@ import sys
 import os
 from ficheiro import Ficheiro
 import pickle
-
+#USAR ISTO   <-----------------------------
+# self.fstpath.pop(0)
+#self.fstpath.pop()
 # recebe como argumento o ficheiro
 def main():
 
@@ -32,7 +34,7 @@ def main():
 
       m = Mapa(linhas, colunas)
       m.parse(path_ficheiro)
-      m.expande_grafo()
+      # m.expandir()
       m.grafo.add_heuristica()
 
       file = open(bin_ficheiro, 'wb')
@@ -46,11 +48,10 @@ def main():
    while saida != 0:
       print("")
       print("1-Desenhar Grafo do Mapa")
-      print("2-Desenhar Grafo da Expansão")
-      print("3-DFS")
-      print("4-BFS")
-      print("5-A-star")
-      print("6-Greedy")
+      print("2-DFS")
+      print("3-BFS")
+      print("4-A-star")
+      print("5-Greedy")
       print("0-Sair")
 
       saida = int(input("introduza a sua opcao-> "))
@@ -60,44 +61,130 @@ def main():
          m.grafo_mapa.desenha()
          l=input("prima enter para continuar")
       elif saida == 2:
-         m.grafo.desenha()
+         m.listaTemp = m.listaPartida.copy()
+         results = []
+         resultDFS = []
+         i = 1
+         while True:
+            if len(resultDFS) != 0:
+               m.grafo.fstpath = resultDFS
+               m.grafo.fstpath.pop(0)
+               m.grafo.fstpath.pop()
+            m.expandir()
+            t_start = time.time()
+            resultDFS, custoTotalDFS = m.grafo.procura_DFS(m.grafo.nodo_inicial)
+            t_end = time.time()
+            print("Veiculo " + str(i) + ":")
+            print("Resultado: " + str(resultDFS) + "\nCusto: " + str(custoTotalDFS))
+            resultDFSExpand, timeDFS = m.expande_caminho(resultDFS)
+            results.append((i, timeDFS))
+            print("Resultado expandido: " + str(resultDFSExpand) + "\nTempo: " + str(timeDFS))
+            print("Tempo para encontrar a solução: " + str(round((t_end - t_start) * 1000, 2)) + " ms")
+            print("\n")
+            i += 1
+            if len(m.listaTemp) == 0:
+               break
+         results.sort(key=m.vencedor)
+         print("Ranking:")
+         n = 1
+         for (veiculo, tempo) in results:
+            print(str(n) + "º: Veiculo " + str(veiculo) + " Tempo " + str(tempo) + " (u.t.)")
+            n += 1
          l = input("prima enter para continuar")
       elif saida == 3:
-         t_start=time.time()
-         resultDFS, custoTotalDFS = m.grafo.procura_DFS(m.grafo.nodo_inicial)
-         t_end=time.time()
-         print("Resultado: " + str(resultDFS) + "\nCusto: " + str(custoTotalDFS))
-         resultDFSExpand, timeDFS = m.expande_caminho(resultDFS)
-         print("Resultado expandido: " + str(resultDFSExpand) + "\nTempo: " + str(timeDFS))
-         print("Tempo para encontrar a solução: " + str( round((t_end-t_start)*1000,2) )+ " ms")
+         m.listaTemp = m.listaPartida.copy()
+         results = []
+         resultBFS = []
+         i = 1
+         while True:
+            if len(resultBFS) != 0:
+               m.grafo.fstpath = resultBFS
+               m.grafo.fstpath.pop(0)
+               m.grafo.fstpath.pop()
+            m.expandir()
+            t_start = time.time()
+            resultBFS, custoTotalBFS = m.grafo.procura_BFS()
+            t_end = time.time()
+            print("Veiculo " + str(i) + ":")
+            print("Resultado: " + str(resultBFS) + "\nCusto: " + str(custoTotalBFS))
+            resultBFSExpand, timeBFS = m.expande_caminho(resultBFS)
+            results.append((i,timeBFS))
+            print("Resultado expandido: " + str(resultBFSExpand) + "\nTempo: " + str(timeBFS))
+            print("Tempo para encontrar a solução: " + str(round((t_end - t_start) * 1000, 2)) + " ms")
+            print("\n")
+            i+=1
+            if len(m.listaTemp) == 0:
+               break
+         results.sort(key=m.vencedor)
+         print("Ranking:")
+         n = 1
+         for (veiculo,tempo) in results:
+            print(str(n) + "º: Veiculo " + str(veiculo) + " Tempo " + str(tempo) + " (u.t.)")
+            n += 1
          l = input("prima enter para continuar")
+
       elif saida == 4:
-         t_start=time.time()
-         resultBFS, custoTotalBFS = m.grafo.procura_BFS()
-         t_end=time.time()
-         print("Resultado: " + str(resultBFS) + "\nCusto: " + str(custoTotalBFS))
-         resultBFSExpand, timeBFS = m.expande_caminho(resultBFS)
-         print("Resultado expandido: " + str(resultBFSExpand) + "\nTempo: " + str(timeBFS))
-         print("Tempo para encontrar a solução: " + str(round((t_end-t_start)*1000,2))+ " ms")
+         m.listaTemp = m.listaPartida.copy()
+         results = []
+         resultAStar = []
+         i = 1
+         while True:
+            if len(resultAStar) != 0:
+               m.grafo.fstpath = resultAStar
+               m.grafo.fstpath.pop(0)
+               m.grafo.fstpath.pop()
+            m.expandir()
+            t_start = time.time()
+            resultAStar, custoTotalAStar = m.grafo.procura_aStar()
+            t_end = time.time()
+            print("Veiculo " + str(i) + ":")
+            print("Resultado: " + str(resultAStar) + "\nCusto: " + str(custoTotalAStar))
+            resultAStarExpand, timeAStar = m.expande_caminho(resultAStar)
+            results.append((i, timeAStar))
+            print("Resultado expandido: " + str(resultAStarExpand) + "\nTempo: " + str(timeAStar))
+            print("Tempo para encontrar a solução: " + str(round((t_end - t_start) * 1000, 2)) + " ms")
+            print("\n")
+            i += 1
+            if len(m.listaTemp) == 0:
+               break
+         results.sort(key=m.vencedor)
+         print("Ranking:")
+         n = 1
+         for (veiculo, tempo) in results:
+            print(str(n) + "º: Veiculo " + str(veiculo) + " Tempo " + str(tempo) + " (u.t.)")
+            n += 1
          l = input("prima enter para continuar")
       elif saida == 5:
-         t_start=time.time()
-         resultAStar, custoTotalAStar = m.grafo.procura_aStar()
-         t_end=time.time()
-         print("Resultado: " + str(resultAStar) + "\nCusto: " + str(custoTotalAStar))
-         resultAStarExpand, timeAStar = m.expande_caminho(resultAStar)
-         print("Resultado expandido: " + str(resultAStarExpand) + "\nTempo: " + str(timeAStar))
-         print("Tempo para encontrar a solução: " + str( round((t_end-t_start)*1000,2) )+ " ms")
+         m.listaTemp = m.listaPartida.copy()
+         results = []
+         resultGreedy = []
+         i = 1
+         while True:
+            if len(resultGreedy) != 0:
+               m.grafo.fstpath = resultGreedy
+               m.grafo.fstpath.pop(0)
+               m.grafo.fstpath.pop()
+            m.expandir()
+            t_start = time.time()
+            resultGreedy, custoTotalGreedy = m.grafo.greedy()
+            t_end = time.time()
+            print("Veiculo " + str(i) + ":")
+            print("Resultado: " + str(resultGreedy) + "\nCusto: " + str(custoTotalGreedy))
+            resultGreedyExpand, timeGreedy = m.expande_caminho(resultGreedy)
+            results.append((i, timeGreedy))
+            print("Resultado expandido: " + str(resultGreedyExpand) + "\nTempo: " + str(timeGreedy))
+            print("Tempo para encontrar a solução: " + str(round((t_end - t_start) * 1000, 2)) + " ms")
+            print("\n")
+            i += 1
+            if len(m.listaTemp) == 0:
+               break
+         results.sort(key=m.vencedor)
+         print("Ranking:")
+         n = 1
+         for (veiculo, tempo) in results:
+            print(str(n) + "º: Veiculo " + str(veiculo) + " Tempo " + str(tempo) + " (u.t.)")
+            n += 1
          l = input("prima enter para continuar")
-      elif saida == 6:
-         t_start=time.time()
-         resultGreedy, custoTotalGreedy = m.grafo.greedy()
-         t_end=time.time()
-         print("Resultado: " + str(resultGreedy) + "\nCusto: " + str(custoTotalGreedy))
-         resultGreedyExpand, timeGreedy = m.expande_caminho(resultGreedy)
-         print("Resultado expandido: " + str(resultGreedyExpand) + "\nTempo: " + str(timeGreedy))
-         print("Tempo para encontrar a solução: " + str( round((t_end-t_start)*1000,2) )+ " ms")
-         l = input("prima enter para continuar")      
       else:
          print("you didn't add anything")
          l = input("prima enter para continuar")

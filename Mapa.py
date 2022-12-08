@@ -1,3 +1,5 @@
+import random
+
 from grafo import Grafo
 from nodo import Nodo
 
@@ -5,8 +7,8 @@ from nodo import Nodo
 class Mapa:
 
     def __init__(self, linha, coluna):
-        self.xPartida = None
-        self.yPartida = None
+        self.listaPartida = []
+        self.listaTemp = []
         self.listaObjetivo = []
         self.linhas = linha
         self.colunas = coluna
@@ -56,8 +58,8 @@ class Mapa:
                         self.grafo_mapa.add_aresta(n2, n1, custo)
 
                 if char == 'P':
-                    self.xPartida = x
-                    self.yPartida = y
+                    obj = (x, y)
+                    self.listaPartida.append(obj)
                 if char == 'F':
                     obj = (x,y)
                     self.listaObjetivo.append(obj)  # lista objetivo é lista de tuplos com as posições dos objetivos
@@ -189,12 +191,13 @@ class Mapa:
 
         return nodos_resultado
 
-    def expande_grafo(self):
+    def expande_grafo(self, x, y):
+        self.grafo = Grafo()
         self.grafo.m_nodos_objetivos = self.listaObjetivo
         nodos_visitados = set()
         nodos_a_visitar = []
-        char_partida = self.mapa[self.xPartida][self.yPartida]
-        nodo_partida = Nodo(self.xPartida, self.yPartida, char_partida, 0, 0)
+        char_partida = self.mapa[x][y]
+        nodo_partida = Nodo(x, y, char_partida, 0, 0)
         self.grafo.nodo_inicial = nodo_partida
         nodos_a_visitar.append(nodo_partida)
         # print(nodo_partida)
@@ -212,6 +215,15 @@ class Mapa:
 
         self.grafo.add_heuristica()
         # print(nodo_partida)
+
+    def expandir(self):
+
+        size = len(self.listaTemp)
+        if size != 0:
+            n = random.randint(0,size-1)
+            (x,y) = self.listaTemp[n]
+            del self.listaTemp[n]
+            self.expande_grafo(x,y)
 
     def expande_caminho(self, caminho):
         result = ""
@@ -263,5 +275,9 @@ class Mapa:
                         result += self.mapa[x][y] + " (" + str(x) + "," + str(y) + ") "
             ant = nodo
         return result, tempo
+
+    def vencedor(self, tuplo):
+        return tuplo[1]
+
     
         
