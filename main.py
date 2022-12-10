@@ -18,18 +18,18 @@ def main():
 
    m = None
 
+   ficheiro = Ficheiro()
+   # calcula o número de linhas e colunas do ficheiro
+   ficheiro.calculaLC(path_ficheiro) 
+   linhas = ficheiro.linhas
+   colunas = ficheiro.colunas
+
    if isExist :
       file = open(bin_ficheiro, 'rb')
       m = pickle.load(file)
       file.close()
 
    else:
-      ficheiro = Ficheiro()
-      # calcula o número de linhas e colunas do ficheiro
-      ficheiro.calculaLC(path_ficheiro) 
-      linhas = ficheiro.linhas
-      colunas = ficheiro.colunas
-
       m = Mapa(linhas, colunas)
       m.parse(path_ficheiro)
       # m.expandir()
@@ -74,7 +74,8 @@ def main():
             t_end = time.time()
             print("Veiculo " + str(i) + ":")
             print("Resultado: " + str(resultDFS) + "\nCusto: " + str(custoTotalDFS))
-            resultDFSExpand, timeDFS = m.expande_caminho(resultDFS)
+            resultDFSExpand, pathDFSExpand, timeDFS = m.expande_caminho(resultDFS)
+            ficheiro.printMapaColorido(pathDFSExpand)
             results.append((i, timeDFS))
             print("Resultado expandido: " + str(resultDFSExpand) + "\nTempo: " + str(timeDFS))
             print("Tempo para encontrar a solução: " + str(round((t_end - t_start) * 1000, 2)) + " ms")
@@ -109,7 +110,8 @@ def main():
             t_end = time.time()
             print("Veiculo " + str(i) + ":")
             print("Resultado: " + str(resultBFS) + "\nCusto: " + str(custoTotalBFS))
-            resultBFSExpand, timeBFS = m.expande_caminho(resultBFS)
+            resultBFSExpand, pathBFSExpand, timeBFS = m.expande_caminho(resultBFS)
+            ficheiro.printMapaColorido(pathBFSExpand)
             results.append((i,timeBFS))
             print("Resultado expandido: " + str(resultBFSExpand) + "\nTempo: " + str(timeBFS))
             print("Tempo para encontrar a solução: " + str(round((t_end - t_start) * 1000, 2)) + " ms")
@@ -141,7 +143,8 @@ def main():
             t_end = time.time()
             print("Veiculo " + str(i) + ":")
             print("Resultado: " + str(resultAStar) + "\nCusto: " + str(custoTotalAStar))
-            resultAStarExpand, timeAStar = m.expande_caminho(resultAStar)
+            resultAStarExpand, pathAStarExpand, timeAStar = m.expande_caminho(resultAStar)
+            ficheiro.printMapaColorido(pathAStarExpand)
             results.append((i, timeAStar))
             print("Resultado expandido: " + str(resultAStarExpand) + "\nTempo: " + str(timeAStar))
             print("Tempo para encontrar a solução: " + str(round((t_end - t_start) * 1000, 2)) + " ms")
@@ -172,7 +175,8 @@ def main():
             t_end = time.time()
             print("Veiculo " + str(i) + ":")
             print("Resultado: " + str(resultGreedy) + "\nCusto: " + str(custoTotalGreedy))
-            resultGreedyExpand, timeGreedy = m.expande_caminho(resultGreedy)
+            resultGreedyExpand, pathGreedyExpand, timeGreedy = m.expande_caminho(resultGreedy)
+            ficheiro.printMapaColorido(pathGreedyExpand)
             results.append((i, timeGreedy))
             print("Resultado expandido: " + str(resultGreedyExpand) + "\nTempo: " + str(timeGreedy))
             print("Tempo para encontrar a solução: " + str(round((t_end - t_start) * 1000, 2)) + " ms")
