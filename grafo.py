@@ -15,7 +15,6 @@ class Grafo:
         self.m_grafo = {}  # dicionario para armazenar os nodos e arestas
         self.m_h = {}  # dicionario para posteriormente armazenar as heuristicas para cada nodo -> pesquisa informada
         self.m_nodos_objetivos = []
-        self.fstpath = []
         self.paths = [[] for x in range(n)]
 
     ################################

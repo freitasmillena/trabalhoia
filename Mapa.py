@@ -13,8 +13,8 @@ class Mapa:
         self.linhas = linha
         self.colunas = coluna
         self.mapa = [[0 for x in range(self.colunas)] for y in range(self.linhas)]
-        self.grafo = Grafo()
-        self.grafo_mapa = Grafo()
+        self.grafo = Grafo(len(self.listaPartida))
+        self.grafo_mapa = Grafo(len(self.listaPartida))
 
     def __str__(self):
         out = ""
@@ -176,9 +176,8 @@ class Mapa:
             v_final_y = nodo.v_y + aceleracao_y
             nodo_final_x = nodo.m_x + v_final_x
             nodo_final_y = nodo.m_y + v_final_y
-
-            if 0 <= nodo_final_x < self.linhas and 0 <= nodo_final_y < self.colunas and self.mapa[nodo_final_x][
-                nodo_final_y] != 'P':
+            # and self.mapa[nodo_final_x][nodo_final_y] != 'P'
+            if 0 <= nodo_final_x < self.linhas and 0 <= nodo_final_y < self.colunas:
                 (n1, c1) = self.linhaColuna(nodo, nodo_final_x, nodo_final_y, v_final_x, v_final_y, aceleracao_x, aceleracao_y)
                 (n2, c2) = self.colunaLinha(nodo, nodo_final_x, nodo_final_y, v_final_x, v_final_y, aceleracao_x, aceleracao_y)
 
@@ -191,8 +190,9 @@ class Mapa:
 
         return nodos_resultado
 
-    def expande_grafo(self, x, y):
-        self.grafo = Grafo()
+    def expande_grafo(self, x, y, copy):
+        self.grafo = Grafo(len(self.listaPartida))
+        self.grafo.paths = copy
         self.grafo.m_nodos_objetivos = self.listaObjetivo
         nodos_visitados = set()
         nodos_a_visitar = []
@@ -223,7 +223,7 @@ class Mapa:
             n = random.randint(0,size-1)
             (x,y) = self.listaTemp[n]
             del self.listaTemp[n]
-            self.expande_grafo(x,y)
+            self.expande_grafo(x,y,self.grafo.paths)
 
     def expande_caminho(self, caminho):
         result = ""
