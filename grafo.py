@@ -9,13 +9,14 @@ from nodo import Nodo
 
 class Grafo:
 
-    def __init__(self):
+    def __init__(self, n):
         self.m_nodos = []
         self.nodo_inicial = None
         self.m_grafo = {}  # dicionario para armazenar os nodos e arestas
         self.m_h = {}  # dicionario para posteriormente armazenar as heuristicas para cada nodo -> pesquisa informada
         self.m_nodos_objetivos = []
         self.fstpath = []
+        self.paths = [[] for x in range(n)]
 
     ################################
     # Escrever o grafo como string #
@@ -127,6 +128,10 @@ class Grafo:
 
     # Neste algoritmo, ignoram-se os 'X'
     def procura_BFS(self):
+        x = 0
+        prevmoves = []
+        #print("Paths: " + str(self.paths))
+
         # definir nodo final
         nodo_objetivo_final = None
 
@@ -149,15 +154,23 @@ class Grafo:
                 path_found = True
                 nodo_objetivo_final = nodo_atual
             else:
-                (a,b) = (-1,-1)
-                if len(self.fstpath) != 0:
-                    nodo_path = self.fstpath.pop(0)
-                    (a,b) = self.nodoCoords(nodo_path)
+                for pathC in self.paths:
+                    if len(pathC) > x:
+                        prevmoves.append(self.nodoCoords(pathC[x]))
                 for (adjacente, custo) in self.m_grafo[nodo_atual]:
-                    if adjacente not in visited and self.nodoCoords(adjacente) != (a,b):
-                        fila.put(adjacente)
-                        parent[adjacente] = nodo_atual
-                        visited.add(adjacente)
+                    equal = False
+                    if adjacente not in visited:
+                        for nodo in prevmoves:
+                            if self.nodoCoords(adjacente) == nodo:
+                                equal = True
+                        if not equal:
+                            fila.put(adjacente)
+                            parent[adjacente] = nodo_atual
+                            visited.add(adjacente)
+                x += 1
+
+
+
 
         # Reconstruir o caminho
 
@@ -170,6 +183,7 @@ class Grafo:
             path.reverse()
             # funçao calcula custo caminho
             custo = self.calcula_custo(path)
+
             return (path, custo)
         else:
             return (path, 0)
@@ -178,13 +192,13 @@ class Grafo:
     # DFS #
     #######
 
-    def procura_DFS(self, start, path=[], visited=set()):
+    def procura_DFS(self, start, path=[], visited=set(), x = 0):
+        prevmoves = []
         path.append(start)
         visited.add(start)
-        (a, b) = (-1, -1)
-        if len(self.fstpath) != 0:
-            nodo_path = self.fstpath.pop(0)
-            (a, b) = self.nodoCoords(nodo_path)
+        for pathC in self.paths:
+            if len(pathC) > x:
+                prevmoves.append(self.nodoCoords(pathC[x]))
         if self.nodoCoords(start) in self.m_nodos_objetivos:
             # calcular o custo do caminho funçao calcula custo.
             custoT = self.calcula_custo(path)
@@ -192,11 +206,16 @@ class Grafo:
             path.clear()
             return (result, custoT)
         for (adjacente, peso) in self.m_grafo[start]:
-            if adjacente not in visited and self.nodoCoords(adjacente) != (a,b):
-                resultado = self.procura_DFS(adjacente, path, visited)
-                if resultado is not None:
-                    return resultado
-        path.pop()  # se nao encontra remover o que está no caminho......
+            equal = False
+            if adjacente not in visited:
+                for nodo in prevmoves:
+                    if self.nodoCoords(adjacente) == nodo:
+                        equal = True
+                if not equal:
+                    resultado = self.procura_DFS(adjacente, path, visited, x+1)
+                    if resultado is not None:
+                        return resultado
+        path.pop()  # se nao encontra remover o que está no caminho.......
         return None
 
 
@@ -204,17 +223,19 @@ class Grafo:
     # Função   getAdjacentes, devolve vizinhos de um nó #
     #####################################################
 
-    def getAdjacentes(self, nodo):
-        #  - Versão Antiga -
+    def getAdjacentes(self, nodo, x):
+        prevmoves = []
         lista = []
-        (a, b) = (-1, -1)
-        if len(self.fstpath) != 0:
-            nodo_path = self.fstpath.pop(0)
-            (a, b) = self.nodoCoords(nodo_path)
+        for pathC in self.paths:
+            if len(pathC) > x:
+                prevmoves.append(self.nodoCoords(pathC[x]))
         for (adjacente, custo) in self.m_grafo[nodo]:
-            if self.nodoCoords(adjacente) != (a,b):
+            equal = False
+            for nodoPrev in prevmoves:
+                if self.nodoCoords(adjacente) == nodoPrev:
+                    equal = True
+            if not equal:
                 lista.append((adjacente, custo))
-
         return lista
 
     ##############################
@@ -269,6 +290,7 @@ class Grafo:
     ############
 
     def procura_aStar(self):
+        x = 0
         # open_list é uma lista de nodos que contem os nodos que já foram visitados, mas em que nem
         # todos os seus nodos vizinhos foram visitados; começa com o nodo inicial
         # closed_list é uma lista que contém os nodos que já foram visitados e em que os seus vizinhos também já foram visitados
@@ -289,6 +311,7 @@ class Grafo:
             # procura o nodo com o menor valor de heurística
             calc_heurist = {}
             flag = 0
+
             for v in open_list:
                 if n == None:
                     n = v
@@ -315,7 +338,7 @@ class Grafo:
                 return reconst_path, self.calcula_custo(reconst_path)
 
             # para todos os nodos vizinhos
-            for (m, weight) in self.getAdjacentes(n): 
+            for (m, weight) in self.getAdjacentes(n,x):
                 # se o nodo atuaç não está na lista open_list nem closed_list
                 # adiciona-se o nodo para a open_list e adiciona o nodo n como o pai
                 if m not in open_list and m not in closed_list:
@@ -334,12 +357,12 @@ class Grafo:
                         if m in closed_list:
                             closed_list.remove(m)
                             open_list.add(m)
-
             # remove n da open_list e adiciona-o à closed_list
             # porque todos os vizinhos foram visitados
+            x += 1
             open_list.remove(n)
             closed_list.add(n)
-
+        print("Open-list: " + str(open_list))
         print('Caminho não existe!')
         return None
 
@@ -348,6 +371,7 @@ class Grafo:
     ##########
 
     def greedy(self):
+        x = 0
         # open_list é uma lista de nodos visitados, mas com vizinhos
         # que ainda não foram todos visitados, começa com o  start
         # closed_list é uma lista de nodos visitados
@@ -389,7 +413,7 @@ class Grafo:
                 return (reconst_path, self.calcula_custo(reconst_path))
 
             # para todos os vizinhos do nodo corrente
-            for (m, weight) in self.getAdjacentes(n):
+            for (m, weight) in self.getAdjacentes(n,x):
                 # Se o nodo corrente nao esta na open nem na closed list
                 # adiciona-lo à open_list e marcar o antecessor
                 if m not in open_list and m not in closed_list:
@@ -398,6 +422,7 @@ class Grafo:
 
             # remover n da open_list e adiciona-lo à closed_list
             # porque todos os seus vizinhos foram inspecionados
+            x += 1
             open_list.remove(n)
             closed_list.add(n)
 

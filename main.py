@@ -1,7 +1,5 @@
 import time
 from Mapa import Mapa
-from nodo import Nodo
-from grafo import Grafo
 import sys
 import os
 from ficheiro import Ficheiro
@@ -67,9 +65,9 @@ def main():
          i = 1
          while True:
             if len(resultDFS) != 0:
-               m.grafo.fstpath = resultDFS
-               m.grafo.fstpath.pop(0)
-               m.grafo.fstpath.pop()
+               resultDFS.pop(0)
+               resultDFS.pop()
+               m.grafo.paths.append(resultDFS)
             m.expandir()
             t_start = time.time()
             resultDFS, custoTotalDFS = m.grafo.procura_DFS(m.grafo.nodo_inicial)
@@ -97,13 +95,17 @@ def main():
          resultBFS = []
          i = 1
          while True:
+            pathsCopy = [[]]
             if len(resultBFS) != 0:
-               m.grafo.fstpath = resultBFS
-               m.grafo.fstpath.pop(0)
-               m.grafo.fstpath.pop()
+               resultBFS.pop(0)
+               resultBFS.pop()
+               m.grafo.paths.append(resultBFS)
             m.expandir()
             t_start = time.time()
+
             resultBFS, custoTotalBFS = m.grafo.procura_BFS()
+
+
             t_end = time.time()
             print("Veiculo " + str(i) + ":")
             print("Resultado: " + str(resultBFS) + "\nCusto: " + str(custoTotalBFS))
@@ -130,9 +132,9 @@ def main():
          i = 1
          while True:
             if len(resultAStar) != 0:
-               m.grafo.fstpath = resultAStar
-               m.grafo.fstpath.pop(0)
-               m.grafo.fstpath.pop()
+               resultAStar.pop(0)
+               resultAStar.pop()
+               m.grafo.paths.append(resultAStar)
             m.expandir()
             t_start = time.time()
             resultAStar, custoTotalAStar = m.grafo.procura_aStar()
@@ -161,9 +163,9 @@ def main():
          i = 1
          while True:
             if len(resultGreedy) != 0:
-               m.grafo.fstpath = resultGreedy
-               m.grafo.fstpath.pop(0)
-               m.grafo.fstpath.pop()
+               resultGreedy.pop(0)
+               resultGreedy.pop()
+               m.grafo.paths.append(resultGreedy)
             m.expandir()
             t_start = time.time()
             resultGreedy, custoTotalGreedy = m.grafo.greedy()
