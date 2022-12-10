@@ -227,13 +227,11 @@ class Mapa:
 
     def expande_caminho(self, caminho):
         result = ""
-        path_expanded = []
         ant = None
         tempo = 0
         for nodo in caminho:
             if ant is None:
                 result += nodo.m_char + " (" + str(nodo.m_x) + "," + str(nodo.m_y) + ") "
-                path_expanded.append(nodo)
             else:
                 dx = abs(nodo.m_x - ant.m_x)
                 dy = abs(nodo.m_y - ant.m_y)
@@ -256,14 +254,12 @@ class Mapa:
                         else:
                             y -= 1
                         result += self.mapa[x][y] + " (" + str(x) + "," + str(y) + ") "
-                        path_expanded.append(Nodo(x, y, self.mapa[x][y]))
                     while x != x_final:
                         if x < x_final:
                             x += 1
                         else:
                             x -= 1
                         result += self.mapa[x][y] + " (" + str(x) + "," + str(y) + ") "
-                        path_expanded.append(Nodo(x, y, self.mapa[x][y]))
                 else: # lc
                     while x != x_final:
                         if x < x_final:
@@ -271,16 +267,14 @@ class Mapa:
                         else:
                             x -= 1
                         result += self.mapa[x][y] + " (" + str(x) + "," + str(y) + ") "
-                        path_expanded.append(Nodo(x, y, self.mapa[x][y]))
                     while y != y_final:
                         if y < y_final:
                             y += 1
                         else:
                             y -= 1
                         result += self.mapa[x][y] + " (" + str(x) + "," + str(y) + ") "
-                        path_expanded.append(Nodo(x, y, self.mapa[x][y]))
             ant = nodo
-        return result, path_expanded, tempo
+        return result, tempo
 
     def vencedor(self, tuplo):
         return tuplo[1]
