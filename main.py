@@ -62,6 +62,7 @@ def main():
          m.listaTemp = m.listaPartida.copy()
          results = []
          resultDFS = []
+         paths = []
          i = 1
          while True:
             if len(resultDFS) != 0:
@@ -75,6 +76,7 @@ def main():
             print("Veiculo " + str(i) + ":")
             print("Resultado: " + str(resultDFS) + "\nCusto: " + str(custoTotalDFS))
             resultDFSExpand, pathDFSExpand, timeDFS = m.expande_caminho(resultDFS)
+            paths.append(pathDFSExpand.copy())
             ficheiro.printMapaColorido(pathDFSExpand)
             results.append((i, timeDFS))
             print("Resultado expandido: " + str(resultDFSExpand) + "\nTempo: " + str(timeDFS))
@@ -89,11 +91,14 @@ def main():
          for (veiculo, tempo) in results:
             print(str(n) + "º: Veiculo " + str(veiculo) + " Tempo " + str(tempo) + " (u.t.)")
             n += 1
+
+         ficheiro.printMapaCaminhosColoridos(paths)
          l = input("prima enter para continuar")
       elif saida == 3:
          m.listaTemp = m.listaPartida.copy()
          results = []
          resultBFS = []
+         paths = []
          i = 1
          while True:
             pathsCopy = [[]]
@@ -111,6 +116,7 @@ def main():
             print("Veiculo " + str(i) + ":")
             print("Resultado: " + str(resultBFS) + "\nCusto: " + str(custoTotalBFS))
             resultBFSExpand, pathBFSExpand, timeBFS = m.expande_caminho(resultBFS)
+            paths.append(pathBFSExpand.copy())
             ficheiro.printMapaColorido(pathBFSExpand)
             results.append((i,timeBFS))
             print("Resultado expandido: " + str(resultBFSExpand) + "\nTempo: " + str(timeBFS))
@@ -125,12 +131,15 @@ def main():
          for (veiculo,tempo) in results:
             print(str(n) + "º: Veiculo " + str(veiculo) + " Tempo " + str(tempo) + " (u.t.)")
             n += 1
+         
+         ficheiro.printMapaCaminhosColoridos(paths)
          l = input("prima enter para continuar")
 
       elif saida == 4:
          m.listaTemp = m.listaPartida.copy()
          results = []
          resultAStar = []
+         paths = []
          i = 1
          while True:
             if len(resultAStar) != 0:
@@ -144,6 +153,7 @@ def main():
             print("Veiculo " + str(i) + ":")
             print("Resultado: " + str(resultAStar) + "\nCusto: " + str(custoTotalAStar))
             resultAStarExpand, pathAStarExpand, timeAStar = m.expande_caminho(resultAStar)
+            paths.append(pathAStarExpand.copy())
             ficheiro.printMapaColorido(pathAStarExpand)
             results.append((i, timeAStar))
             print("Resultado expandido: " + str(resultAStarExpand) + "\nTempo: " + str(timeAStar))
@@ -158,11 +168,14 @@ def main():
          for (veiculo, tempo) in results:
             print(str(n) + "º: Veiculo " + str(veiculo) + " Tempo " + str(tempo) + " (u.t.)")
             n += 1
+         
+         ficheiro.printMapaCaminhosColoridos(paths)
          l = input("prima enter para continuar")
       elif saida == 5:
          m.listaTemp = m.listaPartida.copy()
          results = []
          resultGreedy = []
+         paths = []
          i = 1
          while True:
             if len(resultGreedy) != 0:
@@ -176,6 +189,7 @@ def main():
             print("Veiculo " + str(i) + ":")
             print("Resultado: " + str(resultGreedy) + "\nCusto: " + str(custoTotalGreedy))
             resultGreedyExpand, pathGreedyExpand, timeGreedy = m.expande_caminho(resultGreedy)
+            paths.append(pathGreedyExpand.copy())
             ficheiro.printMapaColorido(pathGreedyExpand)
             results.append((i, timeGreedy))
             print("Resultado expandido: " + str(resultGreedyExpand) + "\nTempo: " + str(timeGreedy))
@@ -190,6 +204,8 @@ def main():
          for (veiculo, tempo) in results:
             print(str(n) + "º: Veiculo " + str(veiculo) + " Tempo " + str(tempo) + " (u.t.)")
             n += 1
+         
+         ficheiro.printMapaCaminhosColoridos(paths)
          l = input("prima enter para continuar")
       else:
          print("you didn't add anything")
