@@ -322,7 +322,7 @@ class Grafo:
                 n = min_estima
             if n == None:
                 print('Caminho não existe!')
-                return None
+                return None, None
 
             # se o nodo atual for o final, reconstroi-se o caminho deste nodo até ao inicial
             if self.nodoCoords(n) in self.m_nodos_objetivos:
@@ -361,9 +361,8 @@ class Grafo:
             x += 1
             open_list.remove(n)
             closed_list.add(n)
-        print("Open-list: " + str(open_list))
         print('Caminho não existe!')
-        return None
+        return None, None
 
     ##########
     # Greedy #
@@ -393,7 +392,7 @@ class Grafo:
 
             if n == None:
                 print('Caminho não existe!')
-                return None
+                return None, None
 
             # se o nodo corrente é o destino
             # reconstruir o caminho a partir desse nodo até ao start
@@ -426,4 +425,4 @@ class Grafo:
             closed_list.add(n)
 
         print('Caminho não existe!')
-        return None
+        return None, None
