@@ -16,9 +16,11 @@ class Ficheiro:
         self.linhas = linhas
         self.colunas = colunas
         self.mapa = [] # matriz com os caracteres do mapa
+        self.diretoria = None
 
     def calculaLC(self, ficheiro):
         f = open(ficheiro, 'r')
+        self.diretoria = ficheiro.split('.')[0]
         linhas = f.readlines()
         self.mapa = linhas
         for linha in linhas:

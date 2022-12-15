@@ -20,7 +20,19 @@ def DFS(m,ficheiro):
          resultDFS.pop(0)
          resultDFS.pop()
          m.grafo.paths.append(resultDFS)
-      m.expandir()
+
+      bin_ficheiro = ficheiro.diretoria + "DFS" + str(i) + ".bin"
+      isExist = os.path.exists(bin_ficheiro)
+      if isExist:
+         file = open(bin_ficheiro, 'rb')
+         m = pickle.load(file)
+         file.close()
+      else :
+         m.expandir()
+         file = open(bin_ficheiro, 'wb')
+         pickle.dump(m, file)
+         file.close()
+      
       t_start = time.time()
       resultDFS, custoTotalDFS = m.grafo.procura_DFS(m.grafo.nodo_inicial)
       t_end = time.time()
@@ -57,7 +69,19 @@ def BFS(m,ficheiro):
          resultBFS.pop(0)
          resultBFS.pop()
          m.grafo.paths.append(resultBFS)
-      m.expandir()
+      
+      bin_ficheiro = ficheiro.diretoria + "BFS" + str(i) + ".bin"
+      isExist = os.path.exists(bin_ficheiro)
+      if isExist:
+         file = open(bin_ficheiro, 'rb')
+         m = pickle.load(file)
+         file.close()
+      else :
+         m.expandir()
+         file = open(bin_ficheiro, 'wb')
+         pickle.dump(m, file)
+         file.close()
+
       t_start = time.time()
 
       resultBFS, custoTotalBFS = m.grafo.procura_BFS()
@@ -95,7 +119,19 @@ def AStar(m,ficheiro):
          resultAStar.pop(0)
          resultAStar.pop()
          m.grafo.paths.append(resultAStar)
-      m.expandir()
+      
+      bin_ficheiro = ficheiro.diretoria + "AStar" + str(i) + ".bin"
+      isExist = os.path.exists(bin_ficheiro)
+      if isExist:
+         file = open(bin_ficheiro, 'rb')
+         m = pickle.load(file)
+         file.close()
+      else :
+         m.expandir()
+         file = open(bin_ficheiro, 'wb')
+         pickle.dump(m, file)
+         file.close()
+
       t_start = time.time()
       resultAStar, custoTotalAStar = m.grafo.procura_aStar()
       t_end = time.time()
@@ -134,7 +170,19 @@ def Greedy(m,ficheiro):
          resultGreedy.pop(0)
          resultGreedy.pop()
          m.grafo.paths.append(resultGreedy)
-      m.expandir()
+      
+      bin_ficheiro = ficheiro.diretoria + "Greedy" + str(i) + ".bin"
+      isExist = os.path.exists(bin_ficheiro)
+      if isExist:
+         file = open(bin_ficheiro, 'rb')
+         m = pickle.load(file)
+         file.close()
+      else :
+         m.expandir()
+         file = open(bin_ficheiro, 'wb')
+         pickle.dump(m, file)
+         file.close()
+
       t_start = time.time()
       resultGreedy, custoTotalGreedy = m.grafo.greedy()
       t_end = time.time()
@@ -223,7 +271,9 @@ def main():
          Greedy(m,ficheiro)
       else:
          print("you didn't add anything")
-      l = input("prima enter para continuar")
+      
+      if saida != 0 :
+         l = input("prima enter para continuar")
 
 
 if __name__ == '__main__':
