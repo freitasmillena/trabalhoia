@@ -74,18 +74,13 @@ class Mapa:
 
         custo_final = 0
         x = nodo.m_x
-        ant = x
         while x != nodo_final_x:
-            ant = x
             if x < nodo_final_x:
                 x += 1
             else:
                 x -= 1
             if self.mapa[x][nodo.m_y] == 'X':
-                if self.mapa[ant][nodo.m_y] == 'X' :
-                    nodo_final_x = nodo.m_x
-                else:
-                    nodo_final_x = ant
+                nodo_final_x = nodo.m_x
                 v_final_x = 0
                 v_final_y = 0
                 custo_final += 25
@@ -100,17 +95,13 @@ class Mapa:
             nodo_opt1 = Nodo(nodo_final_x, y, self.mapa[nodo_final_x][y], v_final_x, v_final_y, ax, ay, "lc")
         else:
             while y != nodo_final_y:
-                ant = y
                 if y < nodo_final_y:
                     y += 1
                 else:
                     y -= 1
                 if self.mapa[nodo_final_x][y] == 'X':
-                    if self.mapa[nodo_final_x][ant] == 'X' :
-                        nodo_final_y = nodo.m_y
-                        nodo_final_x = nodo.m_x
-                    else:
-                        nodo_final_y = ant
+                    nodo_final_y = nodo.m_y
+                    nodo_final_x = nodo.m_x
                     v_final_x = 0
                     v_final_y = 0
                     custo_final += 25
@@ -130,16 +121,12 @@ class Mapa:
         custo_final = 0
         y = nodo.m_y
         while y != nodo_final_y:
-            ant = y
             if y < nodo_final_y:
                 y += 1
             else:
                 y -= 1
             if self.mapa[nodo.m_x][y] == 'X':
-                if self.mapa[nodo.m_x][ant] == 'X' :
-                    nodo_final_y = nodo.m_y
-                else:
-                    nodo_final_y = ant
+                nodo_final_y = nodo.m_y
                 v_final_x = 0
                 v_final_y = 0
                 custo_final += 25
@@ -154,17 +141,13 @@ class Mapa:
             nodo_opt1 = Nodo(x, nodo_final_y, self.mapa[x][nodo_final_y], v_final_x, v_final_y, ax, ay, "cl")
         else:
             while x != nodo_final_x:
-                ant = x
                 if x < nodo_final_x:
                     x += 1
                 else:
                     x -= 1
                 if self.mapa[x][nodo_final_y] == 'X':
-                    if self.mapa[ant][nodo_final_y] == 'X' :
-                        nodo_final_x = nodo.m_x
-                        nodo_final_y = nodo.m_y
-                    else:
-                        nodo_final_x = ant
+                    nodo_final_x = nodo.m_x
+                    nodo_final_y = nodo.m_y
                     v_final_x = 0
                     v_final_y = 0
                     if obstaculo == False:
