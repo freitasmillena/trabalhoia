@@ -230,7 +230,7 @@ class Mapa:
 
         for nodo in caminho:
             if nodo.getColisao():
-                result += nodo.m_char + " (" + str(nodo.m_x) + "," + str(nodo.m_y) + ") CABUM! " 
+                result += nodo.m_char + " (" + str(nodo.m_x) + "," + str(nodo.m_y) + ") KABOOM! " 
                 path_expanded.append(nodo)
             if ant is None:
                 result += nodo.m_char + " (" + str(nodo.m_x) + "," + str(nodo.m_y) + ") "
