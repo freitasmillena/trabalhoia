@@ -2,7 +2,7 @@
 # Cada nodo possui coordenadas x e y, bem como o caracter que representa e a heurística
 
 class Nodo:
-    def __init__(self, x, y, char, vx=0, vy=0, ax=0, ay=0, t=None):
+    def __init__(self, x, y, char, vx=0, vy=0, ax=0, ay=0, t=None, colisao = False):
         self.m_x = x
         self.m_y = y
         self.m_char = char
@@ -11,6 +11,7 @@ class Nodo:
         self.a_x = ax
         self.a_y = ay
         self.trajetoria = t
+        self.colisao = colisao
 
     def __str__(self):
         return self.m_char + " (" + str(self.m_x) + "," + str(self.m_y) + ")"
@@ -36,3 +37,6 @@ class Nodo:
 
     def __hash__(self):
         return hash(self.m_x * 0.5 + self.m_y * 0.25 + self.v_x * 0.25 + self.v_y * 0.33)
+    
+    def getColisao(self):
+        return self.colisao

@@ -93,6 +93,9 @@ class Ficheiro:
         for path in paths:
             cor = self.chooseColor(i)
             for node in path:
+                if node.getColisao:
+                    mapa[(node.m_x, node.m_y)] = cor + node.m_char + self.Default
+                    pintado[(node.m_x, node.m_y)] = True
                 if not pintado[(node.m_x, node.m_y)]:
                     mapa[(node.m_x, node.m_y)] = cor + node.m_char + self.Default
                     pintado[(node.m_x, node.m_y)] = True

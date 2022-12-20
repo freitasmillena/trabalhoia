@@ -1,4 +1,4 @@
-import random
+import random                                                                           
 
 from grafo import Grafo
 from nodo import Nodo
@@ -92,7 +92,7 @@ class Mapa:
         y = nodo.m_y
 
         if obstaculo is True: 
-            nodo_opt1 = Nodo(nodo_final_x, y, self.mapa[nodo_final_x][y], v_final_x, v_final_y, ax, ay, "lc")
+            nodo_opt1 = Nodo(nodo_final_x, y, self.mapa[nodo_final_x][y], v_final_x, v_final_y, ax, ay, "lc", obstaculo)
         else:
             while y != nodo_final_y:
                 if y < nodo_final_y:
@@ -110,7 +110,7 @@ class Mapa:
                 else:
                     custo_final += 1
 
-            nodo_opt1 = Nodo(nodo_final_x, nodo_final_y, self.mapa[nodo_final_x][nodo_final_y], v_final_x, v_final_y, ax, ay, "lc")
+            nodo_opt1 = Nodo(nodo_final_x, nodo_final_y, self.mapa[nodo_final_x][nodo_final_y], v_final_x, v_final_y, ax, ay, "lc", obstaculo)
         
         return nodo_opt1, custo_final
 
@@ -138,7 +138,7 @@ class Mapa:
         x = nodo.m_x
 
         if obstaculo is True: 
-            nodo_opt1 = Nodo(x, nodo_final_y, self.mapa[x][nodo_final_y], v_final_x, v_final_y, ax, ay, "cl")
+            nodo_opt1 = Nodo(x, nodo_final_y, self.mapa[x][nodo_final_y], v_final_x, v_final_y, ax, ay, "cl", obstaculo)
         else:
             while x != nodo_final_x:
                 if x < nodo_final_x:
@@ -157,7 +157,7 @@ class Mapa:
                 else:
                     custo_final += 1
 
-            nodo_opt1 = Nodo(nodo_final_x, nodo_final_y, self.mapa[nodo_final_x][nodo_final_y], v_final_x, v_final_y, ax, ay, "cl")
+            nodo_opt1 = Nodo(nodo_final_x, nodo_final_y, self.mapa[nodo_final_x][nodo_final_y], v_final_x, v_final_y, ax, ay, "cl", obstaculo)
 
         return nodo_opt1, custo_final
 
@@ -227,7 +227,11 @@ class Mapa:
         path_expanded = []
         ant = None
         tempo = 0
+
         for nodo in caminho:
+            if nodo.getColisao():
+                result += nodo.m_char + " (" + str(nodo.m_x) + "," + str(nodo.m_y) + ") CABUM " 
+                path_expanded.append(nodo)
             if ant is None:
                 result += nodo.m_char + " (" + str(nodo.m_x) + "," + str(nodo.m_y) + ") "
                 path_expanded.append(nodo)
