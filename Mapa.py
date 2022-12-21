@@ -284,7 +284,7 @@ class Mapa:
         return result, path_expanded, tempo
 
     def vencedor(self, tuplo):
-        return tuplo[1]
+        return tuplo[3]
 
     
         

@@ -41,7 +41,7 @@ def DFS(m,ficheiro):
       resultDFSExpand, pathDFSExpand, timeDFS = m.expande_caminho(resultDFS)
       paths.append(pathDFSExpand.copy())
       ficheiro.printMapaColorido(pathDFSExpand)
-      results.append((i, timeDFS))
+      results.append((i,timeDFS, custoTotalDFS, timeDFS*0.4 + custoTotalDFS*0.6))
       print("Resultado expandido: " + str(resultDFSExpand) + "\nTempo: " + str(timeDFS))
       print("Tempo para encontrar a solução: " + str(round((t_end - t_start) * 1000, 2)) + " ms")
       print("\n")
@@ -51,9 +51,9 @@ def DFS(m,ficheiro):
    results.sort(key=m.vencedor)
    print("Ranking:")
    n = 1
-   for (veiculo, tempo) in results:
-      print(str(n) + "º: Veiculo " + str(veiculo) + " Tempo " + str(tempo) + " (u.t.)")
-      n += 1
+   for (veiculo, tempo, custo, pontuacao) in results:
+         print(str(n) + "º: Veiculo " + str(veiculo) + " Tempo " + str(tempo) + " Custo " + str(custo) + " Pontuação " +  str(round(pontuacao, 2)))
+         n += 1
 
    ficheiro.printMapaCaminhosColoridos(paths)
 
@@ -92,7 +92,7 @@ def BFS(m,ficheiro):
       resultBFSExpand, pathBFSExpand, timeBFS = m.expande_caminho(resultBFS)
       paths.append(pathBFSExpand.copy())
       ficheiro.printMapaColorido(pathBFSExpand)
-      results.append((i, timeBFS))
+      results.append((i,timeBFS, custoTotalBFS, timeBFS*0.4 + custoTotalBFS*0.6))
       print("Resultado expandido: " + str(resultBFSExpand) + "\nTempo: " + str(timeBFS))
       print("Tempo para encontrar a solução: " + str(round((t_end - t_start) * 1000, 2)) + " ms")
       print("\n")
@@ -102,9 +102,9 @@ def BFS(m,ficheiro):
    results.sort(key=m.vencedor)
    print("Ranking:")
    n = 1
-   for (veiculo, tempo) in results:
-      print(str(n) + "º: Veiculo " + str(veiculo) + " Tempo " + str(tempo) + " (u.t.)")
-      n += 1
+   for (veiculo, tempo, custo, pontuacao) in results:
+         print(str(n) + "º: Veiculo " + str(veiculo) + " Tempo " + str(tempo) + " Custo " + str(custo) + " Pontuação " +  str(round(pontuacao, 2)))
+         n += 1
 
    ficheiro.printMapaCaminhosColoridos(paths)
 
@@ -142,7 +142,7 @@ def AStar(m,ficheiro):
       resultAStarExpand, pathAStarExpand, timeAStar = m.expande_caminho(resultAStar)
       paths.append(pathAStarExpand.copy())
       ficheiro.printMapaColorido(pathAStarExpand)
-      results.append((i, timeAStar))
+      results.append((i,timeAStar, custoTotalAStar, timeAStar*0.4 + custoTotalAStar*0.6))
       print("Resultado expandido: " + str(resultAStarExpand) + "\nTempo: " + str(timeAStar))
       print("Tempo para encontrar a solução: " + str(round((t_end - t_start) * 1000, 2)) + " ms")
       print("\n")
@@ -153,8 +153,8 @@ def AStar(m,ficheiro):
       results.sort(key=m.vencedor)
       print("Ranking:")
       n = 1
-      for (veiculo, tempo) in results:
-         print(str(n) + "º: Veiculo " + str(veiculo) + " Tempo " + str(tempo) + " (u.t.)")
+      for (veiculo, tempo, custo, pontuacao) in results:
+         print(str(n) + "º: Veiculo " + str(veiculo) + " Tempo " + str(tempo) + " Custo " + str(custo) + " Pontuação " +  str(round(pontuacao, 2)))
          n += 1
 
       ficheiro.printMapaCaminhosColoridos(paths)
@@ -193,7 +193,7 @@ def Greedy(m,ficheiro):
       resultGreedyExpand, pathGreedyExpand, timeGreedy = m.expande_caminho(resultGreedy)
       paths.append(pathGreedyExpand.copy())
       ficheiro.printMapaColorido(pathGreedyExpand)
-      results.append((i, timeGreedy))
+      results.append((i,timeGreedy, custoTotalGreedy, timeGreedy*0.4 + custoTotalGreedy*0.6))
       print("Resultado expandido: " + str(resultGreedyExpand) + "\nTempo: " + str(timeGreedy))
       print("Tempo para encontrar a solução: " + str(round((t_end - t_start) * 1000, 2)) + " ms")
       print("\n")
@@ -204,8 +204,8 @@ def Greedy(m,ficheiro):
       results.sort(key=m.vencedor)
       print("Ranking:")
       n = 1
-      for (veiculo, tempo) in results:
-         print(str(n) + "º: Veiculo " + str(veiculo) + " Tempo " + str(tempo) + " (u.t.)")
+      for (veiculo, tempo, custo, pontuacao) in results:
+         print(str(n) + "º: Veiculo " + str(veiculo) + " Tempo " + str(tempo) + " Custo " + str(custo) + " Pontuação " +  str(round(pontuacao, 2)))
          n += 1
       ficheiro.printMapaCaminhosColoridos(paths)
 
